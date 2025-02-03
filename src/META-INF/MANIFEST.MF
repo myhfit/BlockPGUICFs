@@ -1,0 +1,2 @@
+Manifest-Version: 1.0
+Class-Path: ../libs/zxing-core.jar ../libs/zxing-javase.jar

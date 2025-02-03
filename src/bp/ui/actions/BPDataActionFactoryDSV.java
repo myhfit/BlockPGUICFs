@@ -1,0 +1,50 @@
+package bp.ui.actions;
+
+import java.awt.event.ActionEvent;
+
+import javax.swing.Action;
+
+import bp.data.BPDSVContainer;
+import bp.data.BPXYData;
+import bp.res.BPResourceFile;
+import bp.ui.dialog.BPDialogSelectFile;
+import bp.ui.util.UIStd;
+
+public class BPDataActionFactoryDSV implements BPDataActionFactory
+{
+	public Action[] getAction(Object data, String actionname, Runnable loaddatafunc)
+	{
+		Action[] rc = null;
+		if (data != null && actionname != null)
+		{
+			if (data instanceof BPXYData && ACTIONNAME_CLONEDATA.equals(actionname))
+			{
+				Action actclonecsv = BPAction.build("CSV").callback(new DataActionProcessor<BPXYData>((BPXYData) data, BPDataActionFactoryDSV::cloneXYDataToCSV, loaddatafunc)).getAction();
+				rc = new Action[] { actclonecsv };
+			}
+		}
+		return rc;
+	}
+
+	private final static void cloneXYDataToCSV(BPXYData xydata, ActionEvent event)
+	{
+		BPDialogSelectFile dlg = new BPDialogSelectFile();
+		dlg.setVisible(true);
+		BPResourceFile file = dlg.getSelectedFile();
+		if(file!=null)
+		{
+			String encoding = UIStd.input("UTF-8", "Encoding:", "Input file encoding");
+			BPDSVContainer con=new BPDSVContainer(encoding, ",");
+			con.open();
+			try
+			{
+				con.bind(file);
+				con.writeXYData(xydata);
+			}
+			finally
+			{
+				con.close();
+			}
+		}
+	}
+}
