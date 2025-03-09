@@ -129,7 +129,7 @@ public class BPToolGUIStringEscape extends BPToolGUIBase<BPToolGUIStringEscape.B
 			BPToolBarSQ toolbar = new BPToolBarSQ();
 			Action actdecode = BPAction.build("Unescape").callback(this::onDecode).getAction();
 			Action actencode = BPAction.build("Escape").callback(this::onEncode).getAction();
-			toolbar.setBarHeight(24);
+			toolbar.setBarHeight(UIConfigs.BAR_HEIGHT_COMBO());
 			toolbar.setHasButtonBorder(true);
 			toolbar.setActions(new Action[] { actdecode, BPAction.separator(), actencode, BPAction.separator() });
 			toolbar.add(lblen);

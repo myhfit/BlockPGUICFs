@@ -20,7 +20,8 @@ public class BPDataActionFactoryDSV implements BPDataActionFactory
 			if (data instanceof BPXYData && ACTIONNAME_CLONEDATA.equals(actionname))
 			{
 				Action actclonecsv = BPAction.build("CSV").callback(new DataActionProcessor<BPXYData>((BPXYData) data, BPDataActionFactoryDSV::cloneXYDataToCSV, loaddatafunc)).getAction();
-				rc = new Action[] { actclonecsv };
+				Action actclonetsv = BPAction.build("TSV").callback(new DataActionProcessor<BPXYData>((BPXYData) data, BPDataActionFactoryDSV::cloneXYDataToTSV, loaddatafunc)).getAction();
+				rc = new Action[] { actclonecsv, actclonetsv };
 			}
 		}
 		return rc;
@@ -28,13 +29,23 @@ public class BPDataActionFactoryDSV implements BPDataActionFactory
 
 	private final static void cloneXYDataToCSV(BPXYData xydata, ActionEvent event)
 	{
+		cloneXYDataToDSV(xydata, event, ",");
+	}
+
+	private final static void cloneXYDataToTSV(BPXYData xydata, ActionEvent event)
+	{
+		cloneXYDataToDSV(xydata, event, "\t");
+	}
+
+	private final static void cloneXYDataToDSV(BPXYData xydata, ActionEvent event, String delimiter)
+	{
 		BPDialogSelectFile dlg = new BPDialogSelectFile();
 		dlg.setVisible(true);
 		BPResourceFile file = dlg.getSelectedFile();
-		if(file!=null)
+		if (file != null)
 		{
 			String encoding = UIStd.input("UTF-8", "Encoding:", "Input file encoding");
-			BPDSVContainer con=new BPDSVContainer(encoding, ",");
+			BPDSVContainer con = new BPDSVContainer(encoding, delimiter);
 			con.open();
 			try
 			{

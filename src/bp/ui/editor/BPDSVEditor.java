@@ -3,6 +3,9 @@ package bp.ui.editor;
 import java.util.List;
 
 import bp.config.BPConfig;
+import bp.config.BPSetting;
+import bp.config.BPSettingBase;
+import bp.config.BPSettingItem;
 import bp.data.BPDSVContainer;
 import bp.data.BPDSVData;
 import bp.data.BPDataContainer;
@@ -19,6 +22,7 @@ import bp.res.BPResource;
 import bp.ui.actions.BPActionHolder;
 import bp.ui.actions.BPDSVActions;
 import bp.util.LogicUtil;
+import bp.util.TextUtil;
 
 public class BPDSVEditor extends BPXYDEditor<BPXYDContainer>
 {
@@ -90,19 +94,13 @@ public class BPDSVEditor extends BPXYDEditor<BPXYDContainer>
 		{
 			if (res.isIO())
 			{
-				String encoding = LogicUtil.PAR_NN(options, o -> LogicUtil.IFVR(o, o2 -> ((BPConfig) o2).get("encoding")), o -> "utf-8");
+				String encoding = LogicUtil.PAR_NN(options, o -> LogicUtil.IFVR(o, o2 -> TextUtil.eds(((BPConfig) o2).get("encoding"))), o -> "utf-8");
 				String delimiter = null;
 				BPFormat formatt = BPFormatManager.getFormatByName(format.getName());
 				if (formatt != null && formatt.checkFeature(BPFormatFeature.DSV))
 					delimiter = ((BPFormatDSV) formatt).getDelimiter();
 				if (delimiter == null)
 					delimiter = ",";
-				if (options != null)
-				{
-					String oe = options.get("encoding");
-					if (oe != null)
-						encoding = oe;
-				}
 				BPDSVContainer con = new BPDSVContainer(encoding, delimiter);
 				con.bind(res);
 				((BPDSVEditor) editor).bind(con);
@@ -112,6 +110,13 @@ public class BPDSVEditor extends BPXYDEditor<BPXYDContainer>
 		public String getName()
 		{
 			return "DSV Editor";
+		}
+
+		public BPSetting getSetting(String formatkey)
+		{
+			BPSettingBase rc = new BPSettingBase();
+			rc.addItem(BPSettingItem.create("encoding", "Encoding", BPSettingItem.ITEM_TYPE_TEXT, null));
+			return rc;
 		}
 	}
 }

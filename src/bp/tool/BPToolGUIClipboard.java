@@ -61,6 +61,7 @@ public class BPToolGUIClipboard extends BPToolGUIBase<BPToolGUIClipboard.BPToolG
 			sp.setLayout(new BorderLayout());
 			JPanel psrc = new JPanel();
 			BPToolBarSQ toolbar = new BPToolBarSQ();
+			toolbar.setBarHeight(UIConfigs.BAR_HEIGHT_COMBO());
 			Action actget = BPAction.build("GET").callback(this::onGet).getAction();
 			toolbar.setHasButtonBorder(true);
 			toolbar.setActions(new Action[] { actget });

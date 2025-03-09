@@ -64,6 +64,7 @@ public class BPImageGeneratorPanel extends BPCodePanel
 		m_txt.setChangedHandler(m_changedhandler);
 
 		initActions();
+		initListeners();
 
 		m_canpreview = true;
 

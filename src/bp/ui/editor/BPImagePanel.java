@@ -6,7 +6,6 @@ import java.awt.event.ActionEvent;
 import java.awt.event.InputEvent;
 import java.awt.event.KeyEvent;
 import java.awt.image.RenderedImage;
-import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.lang.ref.WeakReference;
@@ -16,6 +15,8 @@ import javax.imageio.ImageIO;
 import javax.swing.Action;
 import javax.swing.JPanel;
 import javax.swing.KeyStroke;
+import javax.swing.border.CompoundBorder;
+import javax.swing.border.EmptyBorder;
 import javax.swing.border.MatteBorder;
 
 import bp.config.BPConfig;
@@ -54,6 +55,7 @@ public class BPImagePanel extends JPanel implements BPEditor<JPanel>, BPViewer<B
 	protected Action m_actcopy;
 	protected Action m_actpaste;
 	protected Action[] m_acts;
+	protected String m_id;
 
 	static
 	{
@@ -71,11 +73,11 @@ public class BPImagePanel extends JPanel implements BPEditor<JPanel>, BPViewer<B
 		setLayout(new BorderLayout());
 		m_ctl = new BPImage();
 		m_toolbar = new BPToolBarSQ(true);
-		m_toolbar.setBorder(new MatteBorder(0, 0, 0, 1, UIConfigs.COLOR_WEAKBORDER()));
+		m_toolbar.setBorder(new CompoundBorder(new MatteBorder(0, 0, 0, 1, UIConfigs.COLOR_WEAKBORDER()), new EmptyBorder(1, 1, 1, 1)));
 		BPAction actzoomin = BPAction.build("+").callback((e) -> zoomin()).vIcon(BPIconResV.ADD()).tooltip("Zoom In").getAction();
 		BPAction actzoomout = BPAction.build("-").callback((e) -> zoomout()).vIcon(BPIconResV.DEL()).tooltip("Zoom Out").getAction();
 		BPAction actdatapipe = BPAction.build("pipe").callback(this::sendToDataPipe).vIcon(BPIconResV.PRJSTREE()).tooltip("Send to Data Pipe").getAction();
-		m_toolbar.setActions(new Action[] { BPAction.separator(), actzoomin, actzoomout, BPAction.separator(), actdatapipe });
+		m_toolbar.setActions(new Action[] { actzoomin, actzoomout, actdatapipe });
 		add(m_ctl, BorderLayout.CENTER);
 		add(m_toolbar, BorderLayout.WEST);
 		initActions();
@@ -148,19 +150,23 @@ public class BPImagePanel extends JPanel implements BPEditor<JPanel>, BPViewer<B
 		if (!noread && con.canOpen())
 		{
 			m_con.open();
-			byte[] bs = m_con.readAll();
-			try (ByteArrayInputStream bis = new ByteArrayInputStream(bs))
+			m_con.useInputStream(bis ->
 			{
-				Image img = ImageIO.read(bis);
-				int h = img.getHeight(null);
-				int w = img.getWidth(null);
-				m_info = w + "x" + h;
-				UIUtil.laterUI(() -> m_ctl.setImage(img));
-			}
-			catch (IOException e)
-			{
-				Std.err(e);
-			}
+				try
+				{
+					Image img = ImageIO.read(bis);
+					int h = img.getHeight(null);
+					int w = img.getWidth(null);
+					m_info = w + "x" + h;
+					UIUtil.laterUI(() -> m_ctl.setImage(img));
+					return true;
+				}
+				catch (IOException e)
+				{
+					Std.err(e);
+					return false;
+				}
+			});
 		}
 	}
 
@@ -269,11 +275,12 @@ public class BPImagePanel extends JPanel implements BPEditor<JPanel>, BPViewer<B
 
 	public void setID(String id)
 	{
+		m_id = id;
 	}
 
 	public String getID()
 	{
-		return null;
+		return m_id;
 	}
 
 	public void setChannelID(int channelid)

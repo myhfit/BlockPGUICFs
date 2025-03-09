@@ -1,3 +1,4 @@
 bp.ui.editor.BPImagePanel$BPEditorFactoryImage
 bp.ui.editor.BPImagesPanel$BPEditorFactoryImages
 bp.ui.editor.BPDSVEditor$BPEditorFactoryDSV
+bp.ui.editor.BPXMLPanel$BPEditorFactoryXML
