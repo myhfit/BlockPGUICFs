@@ -15,12 +15,8 @@ import javax.imageio.ImageIO;
 import javax.swing.Action;
 import javax.swing.JPanel;
 import javax.swing.KeyStroke;
-import javax.swing.border.CompoundBorder;
-import javax.swing.border.EmptyBorder;
-import javax.swing.border.MatteBorder;
 
 import bp.config.BPConfig;
-import bp.config.UIConfigs;
 import bp.data.BPDataContainer;
 import bp.data.BPDataContainerBase;
 import bp.format.BPFormat;
@@ -73,11 +69,11 @@ public class BPImagePanel extends JPanel implements BPEditor<JPanel>, BPViewer<B
 		setLayout(new BorderLayout());
 		m_ctl = new BPImage();
 		m_toolbar = new BPToolBarSQ(true);
-		m_toolbar.setBorder(new CompoundBorder(new MatteBorder(0, 0, 0, 1, UIConfigs.COLOR_WEAKBORDER()), new EmptyBorder(1, 1, 1, 1)));
+		m_toolbar.setBorderVertical(0);
 		BPAction actzoomin = BPAction.build("+").callback((e) -> zoomin()).vIcon(BPIconResV.ADD()).tooltip("Zoom In").getAction();
 		BPAction actzoomout = BPAction.build("-").callback((e) -> zoomout()).vIcon(BPIconResV.DEL()).tooltip("Zoom Out").getAction();
 		BPAction actdatapipe = BPAction.build("pipe").callback(this::sendToDataPipe).vIcon(BPIconResV.PRJSTREE()).tooltip("Send to Data Pipe").getAction();
-		m_toolbar.setActions(new Action[] { actzoomin, actzoomout, actdatapipe });
+		m_toolbar.setActions(new Action[] { BPAction.separator(), actzoomin, actzoomout, actdatapipe });
 		add(m_ctl, BorderLayout.CENTER);
 		add(m_toolbar, BorderLayout.WEST);
 		initActions();

@@ -56,6 +56,8 @@ public class BPToolGUIRegEx extends BPToolGUIBase<BPToolGUIRegEx.BPToolGUIContex
 			Action actfind = BPAction.build("Find").callback(this::onFind).getAction();
 			Action actmatch = BPAction.build("Match").callback(this::onMatch).getAction();
 			Action actreplace = BPAction.build("Replace").callback(this::onReplace).getAction();
+			actreplace.setEnabled(false);
+			toolbar.setBarHeight(UIConfigs.BAR_HEIGHT_COMBO());
 			toolbar.setHasButtonBorder(true);
 			toolbar.setActions(new Action[] { actmatch, BPAction.separator(), actfind, BPAction.separator(), actreplace });
 
@@ -96,8 +98,6 @@ public class BPToolGUIRegEx extends BPToolGUIBase<BPToolGUIRegEx.BPToolGUIContex
 
 		protected void onReplace(ActionEvent e)
 		{
-			// UIStd.wrapSeg(() -> m_data.setText(new
-			// String(Base64.getEncoder().encode(m_regex.getText().getBytes()))));
 		}
 
 		protected void onMatch(ActionEvent e)

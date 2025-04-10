@@ -16,11 +16,9 @@ import javax.imageio.ImageIO;
 import javax.swing.Action;
 import javax.swing.JPanel;
 import javax.swing.KeyStroke;
-import javax.swing.border.MatteBorder;
 
 import bp.BPGUICore;
 import bp.config.BPConfig;
-import bp.config.UIConfigs;
 import bp.data.BPDataContainer;
 import bp.data.BPDataContainerArchive;
 import bp.data.BPDataContainerBase;
@@ -55,9 +53,9 @@ public class BPImagesPanel extends JPanel implements BPEditor<JPanel>, BPViewer<
 
 	protected BPDataContainer m_con;
 	protected List<BPResource> m_children;
-	protected int m_seli = -1;
+	protected int m_seli;
 	protected BPImage m_ctl;
-	protected WeakReference<Consumer<String>> m_dynainfo = null;
+	protected WeakReference<Consumer<String>> m_dynainfo;
 	protected String m_info;
 	protected int m_channelid;
 	protected BPToolBarSQ m_toolbar;
@@ -79,10 +77,11 @@ public class BPImagesPanel extends JPanel implements BPEditor<JPanel>, BPViewer<
 
 	protected void init()
 	{
+		m_seli = -1;
 		setLayout(new BorderLayout());
 		m_ctl = new BPImage();
 		m_toolbar = new BPToolBarSQ(true);
-		m_toolbar.setBorder(new MatteBorder(0, 0, 0, 1, UIConfigs.COLOR_WEAKBORDER()));
+		m_toolbar.setBorderVertical(0);
 
 		BPAction actprev = BPAction.build(">").callback((e) -> prev()).vIcon(BPIconResV.TOLEFT()).acceleratorKey(KeyStroke.getKeyStroke(KeyEvent.VK_LEFT, 0)).tooltip("Prev").getAction();
 		BPAction actnext = BPAction.build("<").callback((e) -> next()).vIcon(BPIconResV.TORIGHT()).acceleratorKey(KeyStroke.getKeyStroke(KeyEvent.VK_RIGHT, 0)).tooltip("Next").getAction();

@@ -135,6 +135,7 @@ public class BPXMLPanel extends BPCodePanel
 		}
 	}
 
+	@SuppressWarnings("unchecked")
 	protected void doRefresh()
 	{
 		DocumentBuilderFactory dbfac = DocumentBuilderFactory.newInstance();
@@ -155,17 +156,29 @@ public class BPXMLPanel extends BPCodePanel
 			Std.err(e);
 		}
 		doc.getDocumentElement().normalize();
-		Map<String, Object> obj = transNode(doc.getDocumentElement());
+		Map<String, Object> obj = (Map<String, Object>) transNode(doc.getDocumentElement());
 
-		m_tree.setModel(new BPTreeModel(new BPTreeFuncsObjectSimple(obj, "_elements")));
+		m_tree.setModel(new BPTreeModel(new BPTreeFuncsObjectSimple(obj, ".elements")));
 	}
 
-	protected Map<String, Object> transNode(Node node)
+	protected Object transNode(Node node)
 	{
 		if (node == null)
 			return null;
-		Map<String, Object> rc = new LinkedHashMap<String, Object>();
-		rc.put("_nodename", node.getNodeName());
+		Map<String, Object> rc = null;
+		String nname = node.getNodeName();
+		String nv = node.getNodeValue();
+		if (nname.equals("#text"))
+		{
+			if (nv.trim().length() == 0)
+				return null;
+			else
+			{
+				return nv.trim();
+			}
+		}
+		rc = new LinkedHashMap<String, Object>();
+		rc.put(".nodename", node.getNodeName());
 		NamedNodeMap nnm = node.getAttributes();
 		if (nnm != null)
 		{
@@ -175,18 +188,19 @@ public class BPXMLPanel extends BPCodePanel
 				rc.put(n.getNodeName(), n.getNodeValue());
 			}
 		}
-		String nv = node.getNodeValue();
 		if (nv != null && nv.length() > 0)
-			rc.put("_nodevalue", node.getNodeValue());
+			rc.put(".nodevalue", node.getNodeValue());
 		NodeList nl = node.getChildNodes();
 		if (nl != null && nl.getLength() > 0)
 		{
-			List<Map<String, Object>> chds = new ArrayList<Map<String, Object>>();
+			List<Object> chds = new ArrayList<Object>();
 			for (int i = 0; i < nl.getLength(); i++)
 			{
-				chds.add(transNode(nl.item(i)));
+				Object subnode = transNode(nl.item(i));
+				if (subnode != null)
+					chds.add(subnode);
 			}
-			rc.put("_elements", chds);
+			rc.put(".elements", chds);
 		}
 		return rc;
 	}
@@ -272,18 +286,18 @@ public class BPXMLPanel extends BPCodePanel
 				else if (v instanceof Map)
 				{
 					StringBuilder sb = new StringBuilder();
-					sb.append("{");
 					Map<String, ?> mo = (Map<String, ?>) v;
+					sb.append("{");
 					for (String k : mo.keySet())
 					{
-						if ("_elements".equals(k))
+						if (".elements".equals(k))
 							continue;
-						if ("_nodename".equals(k))
+						if (".nodename".equals(k))
 						{
 							sb.append(mo.get(k));
 							continue;
 						}
-						if ("_nodevalue".equals(k))
+						if (".nodevalue".equals(k))
 						{
 							sb.append(":" + mo.get(k));
 							continue;
@@ -293,6 +307,8 @@ public class BPXMLPanel extends BPCodePanel
 					sb.append("}");
 					v = sb.toString();
 				}
+				else if (v instanceof String)
+					v = "\"" + v + "\"";
 			}
 			return super.getTreeCellRendererComponent(tree, v, selected, expanded, leaf, row, hasFocus);
 		}

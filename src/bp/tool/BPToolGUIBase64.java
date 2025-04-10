@@ -7,7 +7,11 @@ import java.awt.Window;
 import java.awt.event.ActionEvent;
 import java.io.FileInputStream;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Base64;
+import java.util.Base64.Decoder;
+import java.util.Base64.Encoder;
+import java.util.List;
 
 import javax.swing.Action;
 import javax.swing.JPanel;
@@ -20,6 +24,8 @@ import bp.config.UIConfigs;
 import bp.ui.actions.BPAction;
 import bp.ui.container.BPToolBarSQ;
 import bp.ui.scomp.BPCodePane;
+import bp.ui.scomp.BPComboBox;
+import bp.ui.scomp.BPComboBox.BPComboBoxModel;
 import bp.ui.scomp.BPLabel;
 import bp.ui.util.CommonUIOperations;
 import bp.ui.util.UIStd;
@@ -49,6 +55,7 @@ public class BPToolGUIBase64 extends BPToolGUIBase<BPToolGUIBase64.BPToolGUICont
 		protected BPCodePane m_dest;
 		protected JScrollPane m_scrollsrc;
 		protected JScrollPane m_scrolldest;
+		protected BPComboBox<String> m_comborfc;
 
 		public void initUI(Container par, Object... params)
 		{
@@ -56,6 +63,7 @@ public class BPToolGUIBase64 extends BPToolGUIBase<BPToolGUIBase64.BPToolGUICont
 			m_dest = new BPCodePane();
 			m_scrollsrc = new JScrollPane();
 			m_scrolldest = new JScrollPane();
+			m_comborfc = new BPComboBox<String>();
 			JPanel sp = new JPanel();
 			sp.setLayout(new GridLayout(1, 2, 0, 0));
 			JPanel psrc = new JPanel();
@@ -66,8 +74,16 @@ public class BPToolGUIBase64 extends BPToolGUIBase<BPToolGUIBase64.BPToolGUICont
 			Action actdecode = BPAction.build("Decode").callback(this::onDecode).getAction();
 			Action actencode = BPAction.build("Encode").callback(this::onEncode).getAction();
 			Action actencodefile = BPAction.build("Encode File").callback(this::onEncodeFile).getAction();
+			toolbar.setBarHeight(UIConfigs.BAR_HEIGHT_COMBO());
 			toolbar.setHasButtonBorder(true);
-			toolbar.setActions(new Action[] { actdecode, BPAction.separator(), actencode, BPAction.separator(), actencodefile });
+			toolbar.setActions(new Action[] { actdecode, BPAction.separator(), actencode, BPAction.separator(), actencodefile, BPAction.separator() });
+			toolbar.add(m_comborfc);
+
+			m_comborfc.setListFont();
+			m_src.setMonoFont();
+			m_dest.setMonoFont();
+			lblsrc.setLabelFont();
+			lbldest.setLabelFont();
 
 			m_scrollsrc.setViewportView(m_src);
 			m_scrolldest.setViewportView(m_dest);
@@ -76,11 +92,6 @@ public class BPToolGUIBase64 extends BPToolGUIBase<BPToolGUIBase64.BPToolGUICont
 			sp.setBorder(new EmptyBorder(0, 0, 0, 0));
 			toolbar.setBorder(new CompoundBorder(new MatteBorder(0, 0, 1, 0, UIConfigs.COLOR_STRONGBORDER()), new EmptyBorder(1, 1, 1, 1)));
 			psrc.setBorder(new MatteBorder(0, 0, 0, 1, UIConfigs.COLOR_STRONGBORDER()));
-
-			m_src.setMonoFont();
-			m_dest.setMonoFont();
-			lblsrc.setLabelFont();
-			lbldest.setLabelFont();
 
 			sp.add(psrc);
 			sp.add(pdest);
@@ -96,7 +107,20 @@ public class BPToolGUIBase64 extends BPToolGUIBase<BPToolGUIBase64.BPToolGUICont
 			par.add(sp, BorderLayout.CENTER);
 			par.add(toolbar, BorderLayout.NORTH);
 
+			initCombo();
 			m_src.resizeDoc();
+		}
+
+		protected void initCombo()
+		{
+			List<String> rfcs = new ArrayList<String>();
+			rfcs.add("RFC4648");
+			rfcs.add("RFC4648_URLSAFE");
+			rfcs.add("RFC2045");
+			BPComboBoxModel<String> model = new BPComboBoxModel<String>();
+			model.setDatas(rfcs);
+			m_comborfc.setModel(model);
+			m_comborfc.setSelectedIndex(0);
 		}
 
 		public void initDatas(Object... params)
@@ -105,7 +129,37 @@ public class BPToolGUIBase64 extends BPToolGUIBase<BPToolGUIBase64.BPToolGUICont
 
 		protected void onEncode(ActionEvent e)
 		{
-			UIStd.wrapSeg(() -> m_dest.setText(new String(Base64.getEncoder().encode(m_src.getText().getBytes()))));
+			UIStd.wrapSeg(() -> m_dest.setText(new String(getEncoder().encode(m_src.getText().getBytes()))));
+		}
+
+		protected Encoder getEncoder()
+		{
+			int seli = m_comborfc.getSelectedIndex();
+			switch (seli)
+			{
+				case 0:
+					return Base64.getEncoder();
+				case 1:
+					return Base64.getUrlEncoder();
+				case 2:
+					return Base64.getMimeEncoder();
+			}
+			return null;
+		}
+
+		protected Decoder getDecoder()
+		{
+			int seli = m_comborfc.getSelectedIndex();
+			switch (seli)
+			{
+				case 0:
+					return Base64.getDecoder();
+				case 1:
+					return Base64.getUrlDecoder();
+				case 2:
+					return Base64.getMimeDecoder();
+			}
+			return null;
 		}
 
 		protected void onEncodeFile(ActionEvent e)
@@ -116,7 +170,7 @@ public class BPToolGUIBase64 extends BPToolGUIBase<BPToolGUIBase64.BPToolGUICont
 				try (FileInputStream fis = new FileInputStream(f))
 				{
 					byte[] bs = IOUtil.read(fis);
-					UIStd.wrapSeg(() -> m_dest.setText(new String(Base64.getEncoder().encode(bs))));
+					UIStd.wrapSeg(() -> m_dest.setText(new String(getEncoder().encode(bs))));
 				}
 				catch (IOException e1)
 				{
@@ -127,7 +181,7 @@ public class BPToolGUIBase64 extends BPToolGUIBase<BPToolGUIBase64.BPToolGUICont
 
 		protected void onDecode(ActionEvent e)
 		{
-			UIStd.wrapSeg(() -> m_src.setText(new String(Base64.getDecoder().decode(m_dest.getText().getBytes()))));
+			UIStd.wrapSeg(() -> m_src.setText(new String(getDecoder().decode(m_dest.getText().getBytes()))));
 		}
 	}
 }
