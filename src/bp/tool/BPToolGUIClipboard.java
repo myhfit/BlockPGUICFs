@@ -72,7 +72,7 @@ public class BPToolGUIClipboard extends BPToolGUIBase<BPToolGUIClipboard.BPToolG
 			m_scrollsrc.setBorder(new EmptyBorder(0, 0, 0, 0));
 			m_cmbdf.replaceWBorder();
 			sp.setBorder(new EmptyBorder(0, 0, 0, 0));
-			toolbar.setBorder(new CompoundBorder(new MatteBorder(0, 0, 1, 0, UIConfigs.COLOR_STRONGBORDER()), new EmptyBorder(1, 1, 1, 1)));
+			toolbar.setBorder(new CompoundBorder(new MatteBorder(0, 0, 1, 0, UIConfigs.COLOR_WEAKBORDER()), new EmptyBorder(1, 1, 1, 1)));
 			psrc.setBorder(new MatteBorder(0, 0, 0, 0, UIConfigs.COLOR_STRONGBORDER()));
 
 			sp.add(psrc, BorderLayout.CENTER);
