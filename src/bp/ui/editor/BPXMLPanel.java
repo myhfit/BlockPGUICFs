@@ -6,6 +6,7 @@ import java.awt.GridLayout;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -38,17 +39,19 @@ import bp.format.BPFormat;
 import bp.format.BPFormatXML;
 import bp.res.BPResource;
 import bp.ui.scomp.BPEditorPane;
-import bp.ui.scomp.BPTextPane;
+import bp.ui.scomp.BPTree;
 import bp.ui.scomp.BPTree.BPTreeModel;
 import bp.ui.scomp.BPTree.BPTreeNode;
+import bp.ui.tree.BPTreeComponent;
 import bp.ui.tree.BPTreeComponentBase;
 import bp.ui.tree.BPTreeFuncsObjectSimple;
 import bp.ui.util.UIUtil;
 import bp.util.LogicUtil;
+import bp.util.ObjUtil;
 import bp.util.Std;
 import bp.util.TextUtil;
 
-public class BPXMLPanel extends BPCodePanel
+public class BPXMLPanel extends BPCodeAndPreviewPanel<BPTreeComponent<BPTree>>
 {
 	/**
 	 * 
@@ -99,16 +102,15 @@ public class BPXMLPanel extends BPCodePanel
 
 		m_canpreview = true;
 
-		preview(m_txt);
+		initPreview();
 	}
 
-	protected void setTextContainerValue(String text)
+	protected Object getInitPreviewData()
 	{
-		super.setTextContainerValue(text);
-		preview(m_txt);
+		return new HashMap<String, Object>();
 	}
 
-	protected void preview(BPEditorPane txt)
+	protected void preview()
 	{
 		m_changed.set(true);
 		UIUtil.laterUI(() ->
@@ -118,6 +120,12 @@ public class BPXMLPanel extends BPCodePanel
 				doRefresh();
 			}
 		});
+	}
+
+	public void setPreviewOnlyMode()
+	{
+		super.setPreviewOnlyMode();
+		m_sp.remove(m_scroll);
 	}
 
 	protected void onTextChanged(BPEditorPane txt)
@@ -135,30 +143,44 @@ public class BPXMLPanel extends BPCodePanel
 		}
 	}
 
+	public BPTreeComponent<BPTree> getPreviewComponent()
+	{
+		return m_tree;
+	}
+
 	@SuppressWarnings("unchecked")
-	protected void doRefresh()
+	protected Object transPreviewData(String text, boolean errout)
 	{
 		DocumentBuilderFactory dbfac = DocumentBuilderFactory.newInstance();
 		Document doc = null;
-		String en = m_con.getEncoding();
+		String en = m_con == null ? null : m_con.getEncoding();
 		if (en == null)
 			en = "utf-8";
-		BPTextPane txt = m_txt;
-		if (txt == null)
-			return;
-		try (ByteArrayInputStream bis = new ByteArrayInputStream(TextUtil.fromString(txt.getText(), en)))
+		if (text == null)
+			text = "";
+		try (ByteArrayInputStream bis = new ByteArrayInputStream(TextUtil.fromString(text, en)))
 		{
 			DocumentBuilder db = dbfac.newDocumentBuilder();
 			doc = db.parse(bis);
 		}
 		catch (IOException | ParserConfigurationException | SAXException e)
 		{
-			Std.err(e);
+			if (errout)
+				Std.err(e);
 		}
 		doc.getDocumentElement().normalize();
-		Map<String, Object> obj = (Map<String, Object>) transNode(doc.getDocumentElement());
+		Map<String, Object> rc = (Map<String, Object>) transNode(doc.getDocumentElement());
+		return rc;
+	}
 
-		m_tree.setModel(new BPTreeModel(new BPTreeFuncsObjectSimple(obj, ".elements")));
+	public void setPreviewData(Object data)
+	{
+		m_tree.setModel(new BPTreeModel(new BPTreeFuncsObjectSimple(data, ".elements")));
+	}
+
+	protected void doRefresh()
+	{
+		setPreviewValue(m_txt.getText());
 	}
 
 	protected Object transNode(Node node)
@@ -205,8 +227,16 @@ public class BPXMLPanel extends BPCodePanel
 		return rc;
 	}
 
+	public void clearResource()
+	{
+		m_tree.clearResource();
+		m_sp.removeAll();
+	}
+
 	public void toggleRightPanel()
 	{
+		if (m_ispmode)
+			return;
 		boolean canpreview = !m_canpreview;
 		m_canpreview = canpreview;
 		if (canpreview)
@@ -240,6 +270,8 @@ public class BPXMLPanel extends BPCodePanel
 			if (options != null)
 			{
 				LogicUtil.VLF(((String) options.get("encoding")), TextUtil::checkNotEmpty, con::setEncoding);
+				if (ObjUtil.toBool(options.get("previewonly"), false))
+					pnl.setPreviewOnlyMode();
 			}
 			con.bind(res);
 			pnl.bind(con);
@@ -259,6 +291,7 @@ public class BPXMLPanel extends BPCodePanel
 		{
 			BPSettingBase rc = new BPSettingBase();
 			rc.addItem(BPSettingItem.create("encoding", "Encoding", BPSettingItem.ITEM_TYPE_TEXT, null));
+			rc.addItem(BPSettingItem.create("previewonly", "Preview Only", BPSettingItem.ITEM_TYPE_SELECT, new String[] { "false", "true" }));
 			return rc;
 		}
 	}

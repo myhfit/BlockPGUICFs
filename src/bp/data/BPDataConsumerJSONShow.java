@@ -40,4 +40,9 @@ public class BPDataConsumerJSONShow extends BPDataConsumerTextCollector
 	{
 		return "Show JSON UI";
 	}
+
+	public boolean isEndpoint()
+	{
+		return true;
+	}
 }

@@ -50,7 +50,6 @@ public class BPToolGUIBase64 extends BPToolGUIBase<BPToolGUIBase64.BPToolGUICont
 
 	protected static class BPToolGUIContextBase64 implements BPToolGUIBase.BPToolGUIContext
 	{
-
 		protected BPCodePane m_src;
 		protected BPCodePane m_dest;
 		protected JScrollPane m_scrollsrc;

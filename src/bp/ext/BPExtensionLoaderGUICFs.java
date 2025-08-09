@@ -7,6 +7,7 @@ import javax.swing.Action;
 
 import bp.ui.editor.BPEditorActionManager;
 import bp.ui.editor.BPImagePanel;
+import bp.ui.editor.BPJSONPanel;
 import bp.util.Std;
 
 public class BPExtensionLoaderGUICFs implements BPExtensionLoaderGUISwing
@@ -26,7 +27,7 @@ public class BPExtensionLoaderGUICFs implements BPExtensionLoaderGUISwing
 		return null;
 	}
 
-	public final static Action[] getBarActions(BPImagePanel panel)
+	public final static Action[] getImageBarActions(BPImagePanel panel)
 	{
 		List<Action> acts = new ArrayList<Action>();
 		try
@@ -42,6 +43,7 @@ public class BPExtensionLoaderGUICFs implements BPExtensionLoaderGUISwing
 
 	public void preload()
 	{
-		BPEditorActionManager.registerBarActionFactories(BPImagePanel.class, BPExtensionLoaderGUICFs::getBarActions);
+		BPEditorActionManager.registerBarActionFactories(BPImagePanel.class, BPExtensionLoaderGUICFs::getImageBarActions);
+		BPEditorActionManager.registerBarActionFactories(BPJSONPanel.class, BPExtensionActionJSON::getCloneActions);
 	}
 }

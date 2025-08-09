@@ -6,8 +6,8 @@ import javax.swing.Action;
 
 import bp.data.BPDSVContainer;
 import bp.data.BPXYData;
-import bp.res.BPResourceFile;
-import bp.ui.dialog.BPDialogSelectFile;
+import bp.res.BPResource;
+import bp.ui.util.CommonUIOperations;
 import bp.ui.util.UIStd;
 
 public class BPDataActionFactoryDSV implements BPDataActionFactory
@@ -39,9 +39,7 @@ public class BPDataActionFactoryDSV implements BPDataActionFactory
 
 	private final static void cloneXYDataToDSV(BPXYData xydata, ActionEvent event, String delimiter)
 	{
-		BPDialogSelectFile dlg = new BPDialogSelectFile();
-		dlg.setVisible(true);
-		BPResourceFile file = dlg.getSelectedFile();
+		BPResource file = CommonUIOperations.selectResource(null, true);
 		if (file != null)
 		{
 			String encoding = UIStd.input("UTF-8", "Encoding:", "Input file encoding");
