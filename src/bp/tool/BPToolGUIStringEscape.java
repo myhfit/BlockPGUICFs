@@ -80,17 +80,17 @@ public class BPToolGUIStringEscape extends BPToolGUIBase<BPToolGUIStringEscape.B
 			return TextUtil.unescape(escaped);
 		}
 	}
-	
+
 	protected static class StringEscapeFunc_UP_ASCII implements StringEscapeFunc
 	{
 		public String name()
 		{
-			return "DXF With ASCII(\\U+)(Escape Only)";
+			return "DXF With ASCII(\\U+)";
 		}
 
 		public String escape(String raw)
 		{
-			return TextUtil.escapeToASCII(raw, (c)->
+			return TextUtil.escapeToASCII(raw, (c) ->
 			{
 				int cp = Character.codePointAt(new char[] { c }, 0);
 				return "\\U+" + TextUtil.fillString(Integer.toString(cp, 16), '0', 4);
@@ -99,7 +99,8 @@ public class BPToolGUIStringEscape extends BPToolGUIBase<BPToolGUIStringEscape.B
 
 		public String unescape(String escaped)
 		{
-			return TextUtil.unescape(escaped);
+			String r = escaped.replace("\\U+", "\\u");
+			return TextUtil.unescape(r);
 		}
 	}
 

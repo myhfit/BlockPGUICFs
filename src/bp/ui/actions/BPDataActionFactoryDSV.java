@@ -29,20 +29,22 @@ public class BPDataActionFactoryDSV implements BPDataActionFactory
 
 	private final static void cloneXYDataToCSV(BPXYData xydata, ActionEvent event)
 	{
-		cloneXYDataToDSV(xydata, event, ",");
+		cloneXYDataToDSV(xydata, event, ",", ".csv");
 	}
 
 	private final static void cloneXYDataToTSV(BPXYData xydata, ActionEvent event)
 	{
-		cloneXYDataToDSV(xydata, event, "\t");
+		cloneXYDataToDSV(xydata, event, "\t", ".tsv");
 	}
 
-	private final static void cloneXYDataToDSV(BPXYData xydata, ActionEvent event, String delimiter)
+	private final static void cloneXYDataToDSV(BPXYData xydata, ActionEvent event, String delimiter, String ext)
 	{
-		BPResource file = CommonUIOperations.selectResource(null, true);
+		BPResource file = CommonUIOperations.selectResource(null, true, new String[] { ext });
 		if (file != null)
 		{
 			String encoding = UIStd.input("UTF-8", "Encoding:", "Input file encoding");
+			if (encoding == null)
+				return;
 			BPDSVContainer con = new BPDSVContainer(encoding, delimiter);
 			con.open();
 			try
