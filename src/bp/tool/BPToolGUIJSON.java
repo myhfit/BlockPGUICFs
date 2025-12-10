@@ -100,10 +100,14 @@ public class BPToolGUIJSON extends BPToolGUIBase<BPToolGUIJSON.BPToolGUIContextJ
 			String dest = null;
 			if (params != null && params.length > 0)
 			{
-				Map<String, Object> ps = (Map<String, Object>) params[0];
-				dest = (String) ps.get("dest");
+				Object p0 = params[0];
+				if (p0 instanceof Map)
+				{
+					Map<String, Object> ps = (Map<String, Object>) p0;
+					dest = (String) ps.get("dest");
+				}
 			}
-			
+
 			if (dest != null)
 			{
 				m_dest.setText(dest);
