@@ -43,6 +43,8 @@ public class BPImage extends JComponent implements ComponentListener, MouseListe
 	protected Point m_downpt;
 	protected Point m_oripos;
 
+	protected boolean m_zoomintmode;
+
 	public BPImage()
 	{
 		addComponentListener(this);
@@ -134,6 +136,8 @@ public class BPImage extends JComponent implements ComponentListener, MouseListe
 		{
 			Graphics2D g2d = ((Graphics2D) g);
 			g2d.setRenderingHint(RenderingHints.KEY_RENDERING, RenderingHints.VALUE_RENDER_QUALITY);
+			if (m_zoomintmode)
+				g2d.setRenderingHint(RenderingHints.KEY_INTERPOLATION, RenderingHints.VALUE_INTERPOLATION_NEAREST_NEIGHBOR);
 			AffineTransform f = g2d.getTransform();
 			float scale = 1f;
 			if (f != null)
@@ -193,10 +197,24 @@ public class BPImage extends JComponent implements ComponentListener, MouseListe
 		repaint();
 	}
 
+	public void setZoomIntMode(boolean flag)
+	{
+		m_zoomintmode = flag;
+	}
+
 	public void zoomDelta(int se)
 	{
 		float s;
 		s = ((m_scale == null) ? (m_sw / m_w) : m_scale);
+		if(m_zoomintmode)
+		{
+			if (se > 0)
+				s *= 2;
+			else if (se < 0 && s > 1)
+				s *= 0.5f;
+		}
+		else
+		{
 		if (se > 0)
 		{
 			if (s >= 2f)
@@ -228,6 +246,7 @@ public class BPImage extends JComponent implements ComponentListener, MouseListe
 				s += (se * 0.01);
 			if (s < 0.01f)
 				s = 0.01f;
+		}
 		}
 		zoom(s);
 	}

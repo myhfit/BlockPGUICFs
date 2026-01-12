@@ -8,6 +8,7 @@ import javax.swing.Action;
 import bp.ui.editor.BPEditorActionManager;
 import bp.ui.editor.BPImagePanel;
 import bp.ui.editor.BPJSONPanel;
+import bp.ui.editor.BPRawEditor;
 import bp.util.Std;
 
 public class BPExtensionLoaderGUICFs implements BPExtensionLoaderGUISwing
@@ -45,5 +46,6 @@ public class BPExtensionLoaderGUICFs implements BPExtensionLoaderGUISwing
 	{
 		BPEditorActionManager.registerBarActionFactories(BPImagePanel.class, BPExtensionLoaderGUICFs::getImageBarActions);
 		BPEditorActionManager.registerBarActionFactories(BPJSONPanel.class, BPExtensionActionJSON::getCloneActions);
+		BPEditorActionManager.registerBarActionFactories(BPRawEditor.class, BPExtensionActionRawCFs::getRawActions);
 	}
 }
