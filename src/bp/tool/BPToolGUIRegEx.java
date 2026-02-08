@@ -16,6 +16,8 @@ import javax.swing.border.MatteBorder;
 
 import bp.config.UIConfigs;
 import bp.ui.actions.BPAction;
+import bp.ui.actions.BPActionConstCFs;
+import bp.ui.actions.BPActionHelpers;
 import bp.ui.container.BPToolBarSQ;
 import bp.ui.scomp.BPCodePane;
 import bp.ui.scomp.BPLabel;
@@ -25,7 +27,7 @@ public class BPToolGUIRegEx extends BPToolGUIBase<BPToolGUIRegEx.BPToolGUIContex
 {
 	public String getName()
 	{
-		return "Regular Expression";
+		return BPActionHelpers.getValue(BPActionConstCFs.TXT_REGEXP, null, null);
 	}
 
 	protected BPToolGUIContextRegEx createToolContext()

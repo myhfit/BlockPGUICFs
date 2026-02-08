@@ -5,6 +5,9 @@ import java.util.List;
 
 import javax.swing.Action;
 
+import bp.context.BPFileContext;
+import bp.locale.BPLocaleHelpers;
+import bp.ui.actions.BPActionHelperCFs;
 import bp.ui.editor.BPEditorActionManager;
 import bp.ui.editor.BPImagePanel;
 import bp.ui.editor.BPJSONPanel;
@@ -40,6 +43,11 @@ public class BPExtensionLoaderGUICFs implements BPExtensionLoaderGUISwing
 			Std.err(e);
 		}
 		return acts.toArray(new Action[acts.size()]);
+	}
+	
+	public void install(BPFileContext context)
+	{
+		BPLocaleHelpers.registerHelper(BPActionHelperCFs.ACTIONHELPER_PACK_CFS, new BPActionHelperCFs());
 	}
 
 	public void preload()

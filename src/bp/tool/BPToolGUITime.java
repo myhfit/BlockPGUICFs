@@ -27,6 +27,8 @@ import javax.swing.border.MatteBorder;
 
 import bp.config.UIConfigs;
 import bp.ui.actions.BPAction;
+import bp.ui.actions.BPActionConstCommon;
+import bp.ui.actions.BPActionHelpers;
 import bp.ui.dialog.BPDialogSelectData;
 import bp.ui.scomp.BPComboBox;
 import bp.ui.scomp.BPComboBox.BPComboBoxModel;
@@ -41,7 +43,7 @@ public class BPToolGUITime extends BPToolGUIBase<BPToolGUITime.BPToolGUIContextT
 {
 	public String getName()
 	{
-		return "Time";
+		return BPActionHelpers.getValue(BPActionConstCommon.TXT_TIME, null, null);
 	}
 
 	protected BPToolGUIContextTime createToolContext()
