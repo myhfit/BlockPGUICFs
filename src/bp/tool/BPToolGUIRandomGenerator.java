@@ -16,6 +16,8 @@ import javax.swing.border.MatteBorder;
 
 import bp.config.UIConfigs;
 import bp.ui.actions.BPAction;
+import bp.ui.actions.BPActionConstCFs;
+import bp.ui.actions.BPActionHelpers;
 import bp.ui.container.BPToolBarSQ;
 import bp.ui.editor.BPCodePanel;
 import bp.ui.scomp.BPCheckBox;
@@ -29,7 +31,7 @@ public class BPToolGUIRandomGenerator extends BPToolGUIBase<BPToolGUIRandomGener
 {
 	public String getName()
 	{
-		return "Random Number Generator";
+		return BPActionHelpers.getValue(BPActionConstCFs.TNAME_RANDOMGEN);
 	}
 
 	protected BPToolGUIContextRandomGenerator createToolContext()

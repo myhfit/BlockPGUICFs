@@ -47,7 +47,7 @@ public class BPExtensionLoaderGUICFs implements BPExtensionLoaderGUISwing
 	
 	public void install(BPFileContext context)
 	{
-		BPLocaleHelpers.registerHelper(BPActionHelperCFs.ACTIONHELPER_PACK_CFS, new BPActionHelperCFs());
+		BPLocaleHelpers.registerHelper(new BPActionHelperCFs());
 	}
 
 	public void preload()

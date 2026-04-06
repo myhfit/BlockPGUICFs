@@ -5,6 +5,8 @@ import java.awt.Container;
 import java.util.Map;
 
 import bp.data.BPDataWrapper;
+import bp.ui.actions.BPActionConstCFs;
+import bp.ui.actions.BPActionHelpers;
 import bp.ui.editor.BPImageGeneratorPanel;
 import bp.ui.frame.BPFrame;
 import bp.ui.scomp.BPVarControlGroup;
@@ -15,7 +17,7 @@ public class BPToolGUIImageGenerator extends BPToolGUIBase<BPToolGUIImageGenerat
 {
 	public String getName()
 	{
-		return "Image Generator";
+		return BPActionHelpers.getValue(BPActionConstCFs.TNAME_IMGGEN);
 	}
 
 	protected BPToolGUIContextImageGenerator createToolContext()

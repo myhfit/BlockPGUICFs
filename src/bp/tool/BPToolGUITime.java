@@ -26,6 +26,10 @@ import javax.swing.border.EmptyBorder;
 import javax.swing.border.MatteBorder;
 
 import bp.config.UIConfigs;
+import bp.locale.BPLocaleHelper;
+import bp.locale.BPLocaleHelperDirect;
+import bp.locale.BPLocaleVerb;
+import bp.tool.locale.BPLocaleConstTGTime;
 import bp.ui.actions.BPAction;
 import bp.ui.actions.BPActionConstCommon;
 import bp.ui.actions.BPActionHelpers;
@@ -43,7 +47,7 @@ public class BPToolGUITime extends BPToolGUIBase<BPToolGUITime.BPToolGUIContextT
 {
 	public String getName()
 	{
-		return BPActionHelpers.getValue(BPActionConstCommon.TXT_TIME, null, null);
+		return BPActionHelpers.getValue(BPActionConstCommon.TXT_TIME);
 	}
 
 	protected BPToolGUIContextTime createToolContext()
@@ -59,17 +63,20 @@ public class BPToolGUITime extends BPToolGUIBase<BPToolGUITime.BPToolGUIContextT
 		protected BPTextField m_txttlocal;
 		protected BPComboBox<TimeZone> m_cmbzones;
 		protected BPTextField m_txtttarget;
+		protected BPLocaleHelper<BPLocaleConstTGTime, BPLocaleVerb> m_lh;
 
 		public void initUI(Container par, Object... params)
 		{
+			BPLocaleHelper<BPLocaleConstTGTime, BPLocaleVerb> lh = BPLocaleHelperDirect.createHelper(BPLocaleConstTGTime.class, null, BPLocaleConstTGTime.RAWTIME.getPackName(), "bp/tool/locale/");
+			m_lh=lh;
 			JPanel sp = new JPanel();
 			sp.setLayout(new GridLayout(1, 2, 0, 0));
 			JPanel psrc = new JPanel();
 			JPanel pdest = new JPanel();
 			JPanel psrcbox = new JPanel();
 			JPanel pdestbox = new JPanel();
-			BPLabel lblsrc = new BPLabel(" Source");
-			BPLabel lbldest = new BPLabel(" Time");
+			BPLabel lblsrc = new BPLabel(" " + BPActionHelpers.getValue(BPActionConstCommon.TXT_SOURCE));
+			BPLabel lbldest = new BPLabel(" " + BPActionHelpers.getValue(BPActionConstCommon.TXT_TIME));
 
 			sp.setBorder(new EmptyBorder(0, 0, 0, 0));
 			psrc.setBorder(new MatteBorder(0, 0, 0, 1, UIConfigs.COLOR_STRONGBORDER()));
@@ -87,26 +94,26 @@ public class BPToolGUITime extends BPToolGUIBase<BPToolGUITime.BPToolGUIContextT
 			pdestbox.setLayout(new BoxLayout(pdestbox, BoxLayout.Y_AXIS));
 
 			m_txtts = new BPTextField();
-			psrcbox.add(createLinePanel("Time(ms):", m_txtts, BPAction.build(" > ").callback(this::onToTime).getAction()));
-			psrcbox.add(createLinePanel(new BPToolSQButton("Get Current", BPAction.build("current").callback(this::onGetCurrent).getAction())));
+			psrcbox.add(createLinePanel(BPActionHelpers.getValue(BPActionConstCommon.TXT_TIME) + "(ms):", m_txtts, BPAction.build(" > ").callback(this::onToTime).getAction()));
+			psrcbox.add(createLinePanel(new BPToolSQButton(lh.v(BPLocaleConstTGTime.ACT_BTNGETCUR), BPAction.build("current").callback(this::onGetCurrent).getAction())));
 			psrcbox.add(Box.createGlue());
 
 			m_txtdf = new BPTextField();
 			m_txtdf.setText("yyyy-MM-dd HH:mm:ss.SSS");
-			pdestbox.add(createLinePanel("Format:", m_txtdf, null));
+			pdestbox.add(createLinePanel(BPActionHelpers.getValue(BPActionConstCommon.TXT_FORMAT) + ":", m_txtdf, null));
 			m_txttraw = new BPTextField();
-			pdestbox.add(createLinePanel("Raw Time:", m_txttraw, BPAction.build(" < ").callback(this::onFromRawTime).getAction()));
+			pdestbox.add(createLinePanel(lh.v(BPLocaleConstTGTime.RAWTIME) + ":", m_txttraw, BPAction.build(" < ").callback(this::onFromRawTime).getAction()));
 			m_txttlocal = new BPTextField();
-			pdestbox.add(createLinePanel("Local Time:", m_txttlocal, BPAction.build(" < ").callback(this::onFromLocalTime).getAction()));
-			BPLabel lbl = new BPLabel("Time Zone");
+			pdestbox.add(createLinePanel(lh.v(BPLocaleConstTGTime.LOCALTIME) + ":", m_txttlocal, BPAction.build(" < ").callback(this::onFromLocalTime).getAction()));
+			BPLabel lbl = new BPLabel(lh.v(BPLocaleConstTGTime.TIMEZONE));
 			lbl.setLabelFont();
 			pdestbox.add(createLinePanel(lbl));
 			m_cmbzones = new BPComboBox<TimeZone>();
 			m_cmbzones.setModel(new BPComboBoxModel<TimeZone>());
 			m_cmbzones.setRenderer(new TimeZoneRenderer());
-			pdestbox.add(createLinePanel("Time Zone:", m_cmbzones, BPAction.build(" ... ").callback(this::onSelectTimeZone).getAction()));
+			pdestbox.add(createLinePanel(lh.v(BPLocaleConstTGTime.TIMEZONE) + ":", m_cmbzones, BPAction.build(" ... ").callback(this::onSelectTimeZone).getAction()));
 			m_txtttarget = new BPTextField();
-			pdestbox.add(createLinePanel("Target Time:", m_txtttarget, BPAction.build(" < ").callback(this::onFromTargetTime).getAction()));
+			pdestbox.add(createLinePanel(lh.v(BPLocaleConstTGTime.TARTIME) + ":", m_txtttarget, BPAction.build(" < ").callback(this::onFromTargetTime).getAction()));
 
 			pdestbox.add(Box.createGlue());
 
@@ -222,7 +229,7 @@ public class BPToolGUITime extends BPToolGUIBase<BPToolGUITime.BPToolGUIContextT
 			BPDialogSelectData<TimeZone> dlg = new BPDialogSelectData<TimeZone>();
 			dlg.setTransFunc(BPToolGUIContextTime::timeZone2Str);
 			dlg.setSource(tzs);
-			dlg.setTitle("Select TimeZone");
+			dlg.setTitle(UIUtil.wrapBPTitle(BPActionConstCommon.TXT_SEL) + " " + m_lh.v(BPLocaleConstTGTime.TIMEZONE));
 			dlg.setFilterVisible(true);
 			dlg.setVisible(true);
 			TimeZone tz = dlg.getSelectData();

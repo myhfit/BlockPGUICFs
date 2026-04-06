@@ -20,17 +20,20 @@ public class BPToolFactoryGUICFs implements BPToolFactory
 
 	public void install(BiConsumer<String, BPTool> installfunc, BPPlatform platform)
 	{
-		String pmname = BPActionHelpers.getValue(BPActionConstCommon.TXT_COMMON, null, null);
-		installfunc.accept("Decode/Encode", new BPToolGUIStringEscape());
-		installfunc.accept("Decode/Encode", new BPToolGUIBase64());
-		installfunc.accept("Decode/Encode", new BPToolGUIURLEncoding());
-		installfunc.accept("Decode/Encode", new BPToolGUIJSON());
-		installfunc.accept("Hash", new BPToolGUIMessageDigest());
-		installfunc.accept(pmname, new BPToolGUIClipboard());
-		installfunc.accept(pmname, new BPToolGUIRegEx());
-		installfunc.accept(pmname, new BPToolGUITime());
-		installfunc.accept("Generator", new BPToolGUIImageGenerator());
-		installfunc.accept("Generator", new BPToolGUIRandomGenerator());
-		installfunc.accept("Generator", new BPToolGUIIDGenerator());
+		String pmcommon = BPActionHelpers.getValue(BPActionConstCommon.TXT_COMMON, null, null);
+		String pmdeen = BPActionHelpers.getValue(BPActionConstCommon.TXT_DE_EN, null, null);
+		String pmhash = BPActionHelpers.getValue(BPActionConstCommon.TXT_HASH, null, null);
+		String pmgen = BPActionHelpers.getValue(BPActionConstCommon.TXT_GENERATOR, null, null);
+		installfunc.accept(pmdeen, new BPToolGUIStringEscape());
+		installfunc.accept(pmdeen, new BPToolGUIBase64());
+		installfunc.accept(pmdeen, new BPToolGUIURLEncoding());
+		installfunc.accept(pmdeen, new BPToolGUIJSON());
+		installfunc.accept(pmhash, new BPToolGUIMessageDigest());
+		installfunc.accept(pmcommon, new BPToolGUIClipboard());
+		installfunc.accept(pmcommon, new BPToolGUIRegEx());
+		installfunc.accept(pmcommon, new BPToolGUITime());
+		installfunc.accept(pmgen, new BPToolGUIImageGenerator());
+		installfunc.accept(pmgen, new BPToolGUIRandomGenerator());
+		installfunc.accept(pmgen, new BPToolGUIIDGenerator());
 	}
 }

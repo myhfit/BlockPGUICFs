@@ -17,7 +17,15 @@ import javax.swing.border.MatteBorder;
 import bp.config.UIConfigs;
 import bp.id.SerialIDGenerator;
 import bp.id.UUIDGenerator;
+import bp.locale.BPLocaleConstCC;
+import bp.locale.BPLocaleHelper;
+import bp.locale.BPLocaleHelperDirect;
+import bp.locale.BPLocaleHelpers;
+import bp.locale.BPLocaleVerb;
+import bp.tool.locale.BPLocaleConstTGGens;
 import bp.ui.actions.BPAction;
+import bp.ui.actions.BPActionConstCFs;
+import bp.ui.actions.BPActionHelpers;
 import bp.ui.container.BPToolBarSQ;
 import bp.ui.editor.BPCodePanel;
 import bp.ui.scomp.BPCheckBox;
@@ -32,7 +40,7 @@ public class BPToolGUIIDGenerator extends BPToolGUIBase<BPToolGUIIDGenerator.BPT
 {
 	public String getName()
 	{
-		return "ID Generator";
+		return BPActionHelpers.getValue(BPActionConstCFs.TNAME_IDGEN);
 	}
 
 	public String getSubTitle()
@@ -52,18 +60,20 @@ public class BPToolGUIIDGenerator extends BPToolGUIBase<BPToolGUIIDGenerator.BPT
 		protected BPComboBox<GenIDFunc> m_cmbfuncs;
 		protected BPTextField m_tfcount;
 		protected BPCheckBox m_chkoneline;
+		protected BPLocaleHelper<BPLocaleConstTGGens, BPLocaleVerb> m_lh;
 
 		public void initUI(Container par, Object... params)
 		{
+			m_lh = BPLocaleHelperDirect.createHelper(BPLocaleConstTGGens.class, null, BPLocaleConstTGGens.PACK_TGGENS, "bp/tool/locale/");
 			BPToolBarSQ toolbar = new BPToolBarSQ();
-			Action actclear = BPAction.build("Clear").callback(this::onClear).getAction();
-			Action actgen = BPAction.build("Generate").callback(this::onGen).getAction();
+			Action actclear = BPActionHelpers.getActionFromHelper(BPLocaleConstTGGens.ACT_BTNCLEAR, m_lh, this::onClear);
+			Action actgen = BPActionHelpers.getActionFromHelper(BPLocaleConstTGGens.ACT_BTNGEN, m_lh, this::onGen);
 			BPCodePanel tp = new BPCodePanel();
 			m_tfcount = new BPTextField();
-			m_chkoneline = new BPCheckBox("One Line");
+			m_chkoneline = new BPCheckBox(m_lh.v(BPLocaleConstTGGens.ACT_BTNONELINE));
 			m_cmbfuncs = new BPComboBox<GenIDFunc>();
-			BPLabel lblnum = new BPLabel(" Count: ");
-			BPLabel lblfunc = new BPLabel(" Function: ");
+			BPLabel lblnum = new BPLabel(" " + m_lh.v(BPLocaleConstTGGens.ACT_BTNCOUNT) + ": ");
+			BPLabel lblfunc = new BPLabel(" " + BPLocaleHelpers.getValue(BPLocaleConstCC.FUNCTION) + ": ");
 			JPanel px = new JPanel();
 			m_txt = tp.getTextPanel();
 

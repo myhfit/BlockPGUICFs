@@ -18,6 +18,9 @@ import javax.swing.border.MatteBorder;
 
 import bp.config.UIConfigs;
 import bp.ui.actions.BPAction;
+import bp.ui.actions.BPActionConstCFs;
+import bp.ui.actions.BPActionConstCommon;
+import bp.ui.actions.BPActionHelpers;
 import bp.ui.container.BPToolBarSQ;
 import bp.ui.scomp.BPCodePane;
 import bp.ui.scomp.BPLabel;
@@ -29,17 +32,12 @@ public class BPToolGUIURLEncoding extends BPToolGUIBase<BPToolGUIURLEncoding.BPT
 {
 	public String getName()
 	{
-		return "URL Encoding";
+		return BPActionHelpers.getValue(BPActionConstCFs.TNAME_URLENCODING);
 	}
 
 	protected BPToolGUIContextURLEncoding createToolContext()
 	{
 		return new BPToolGUIContextURLEncoding();
-	}
-
-	protected String getSubTitle()
-	{
-		return "Decode/Encode URL";
 	}
 
 	protected static class BPToolGUIContextURLEncoding implements BPToolGUIBase.BPToolGUIContext
@@ -62,14 +60,15 @@ public class BPToolGUIURLEncoding extends BPToolGUIBase<BPToolGUIURLEncoding.BPT
 			JPanel psrc = new JPanel();
 			JPanel pdest = new JPanel();
 			JPanel px = new JPanel();
-			BPLabel lblsrc = new BPLabel(" Raw");
-			BPLabel lbldest = new BPLabel(" Encoded");
-			BPLabel lblen = new BPLabel("Encoding:");
+			BPLabel lblsrc = new BPLabel(" " + BPActionHelpers.getValue(BPActionConstCommon.TXT_RAW));
+			BPLabel lbldest = new BPLabel(" " + BPActionHelpers.getValue(BPActionConstCommon.TXT_ESCAPED));
+			BPLabel lblen = new BPLabel(BPActionHelpers.getValue(BPActionConstCommon.TXT_ENCODING) + ":");
 			BPToolBarSQ toolbar = new BPToolBarSQ();
-			Action actdecode = BPAction.build("Decode").callback(this::onDecode).getAction();
-			Action actencode = BPAction.build("Encode").callback(this::onEncode).getAction();
+			Action actdecode = BPActionHelpers.getAction(BPActionConstCommon.TXT_DECODE, this::onDecode);
+			Action actencode = BPActionHelpers.getAction(BPActionConstCommon.TXT_ENCODE, this::onEncode);
 			toolbar.setHasButtonBorder(true);
-			toolbar.setActions(new Action[] { actdecode, BPAction.separator(), actencode, BPAction.separator() });
+			toolbar.setBarHeight(UIConfigs.BAR_HEIGHT_COMBO());
+			toolbar.setActions(new Action[] { actdecode, BPAction.separator(), actencode, BPAction.separator(), BPAction.separator(), BPAction.separator() });
 			toolbar.add(lblen);
 			toolbar.add(m_encoding);
 			toolbar.add(px);

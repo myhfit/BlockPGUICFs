@@ -8,7 +8,6 @@ import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.function.Consumer;
 
@@ -24,12 +23,8 @@ import bp.data.BPDataContainerArchive;
 import bp.data.BPDataContainerBase;
 import bp.data.BPDataContainerFileSystem;
 import bp.format.BPFormat;
-import bp.format.BPFormatBMP;
 import bp.format.BPFormatFeature;
-import bp.format.BPFormatGIF;
-import bp.format.BPFormatJPEG;
 import bp.format.BPFormatManager;
-import bp.format.BPFormatPNG;
 import bp.res.BPResource;
 import bp.res.BPResourceFileSystem;
 import bp.res.BPResourceIO;
@@ -42,6 +37,7 @@ import bp.ui.scomp.BPImage;
 import bp.util.ClipboardUtil;
 import bp.util.FileUtil;
 import bp.util.IOUtil;
+import bp.util.ObjUtil;
 import bp.util.Std;
 
 public class BPImagesPanel extends JPanel implements BPEditor<JPanel>, BPViewer<BPDataContainer>
@@ -61,8 +57,6 @@ public class BPImagesPanel extends JPanel implements BPEditor<JPanel>, BPViewer<
 	protected BPToolBarSQ m_toolbar;
 	protected Action[] m_acts;
 
-	protected final static String[] S_SUPPORTED_FORMATS = new String[] { BPFormatBMP.FORMAT_BMP, BPFormatGIF.FORMAT_GIF, BPFormatJPEG.FORMAT_JPEG, BPFormatPNG.FORMAT_PNG };
-
 	private String m_id;
 
 	static
@@ -77,6 +71,7 @@ public class BPImagesPanel extends JPanel implements BPEditor<JPanel>, BPViewer<
 
 	protected void init()
 	{
+		setFocusable(true);
 		m_seli = -1;
 		setLayout(new BorderLayout());
 		m_ctl = new BPImage();
@@ -139,10 +134,15 @@ public class BPImagesPanel extends JPanel implements BPEditor<JPanel>, BPViewer<
 		ClipboardUtil.setImage(m_ctl.getImage());
 	}
 
+	protected List<String> getSupportedFormats()
+	{
+		return ObjUtil.mappingList(BPFormatManager.getFormatsByFeature(BPFormatFeature.IMAGE), (f -> f.getName()), false);
+	}
+
 	public void bind(BPDataContainer con, boolean noread)
 	{
 		m_con = con;
-		List<String> formats = Arrays.asList(S_SUPPORTED_FORMATS);
+		List<String> formats = getSupportedFormats();
 		List<BPResource> children = new ArrayList<BPResource>();
 		if (!noread)
 		{
@@ -193,11 +193,13 @@ public class BPImagesPanel extends JPanel implements BPEditor<JPanel>, BPViewer<
 		String ext = FileUtil.getExt(name);
 		BPFormat format = BPFormatManager.getFormatByExt(ext);
 		boolean flag = false;
+		List<String> sformats = getSupportedFormats();
 		if (format != null)
 		{
-			for (int i = 0; i < S_SUPPORTED_FORMATS.length; i++)
+			String fname = format.getName();
+			for (String sfname : sformats)
 			{
-				if (S_SUPPORTED_FORMATS[i].equals(format.getName()))
+				if (sfname.equals(fname))
 				{
 					flag = true;
 					break;

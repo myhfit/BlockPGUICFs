@@ -16,7 +16,11 @@ import javax.swing.border.EmptyBorder;
 import javax.swing.border.MatteBorder;
 
 import bp.config.UIConfigs;
+import bp.locale.BPLocaleConstCC;
+import bp.locale.BPLocaleHelpers;
 import bp.ui.actions.BPAction;
+import bp.ui.actions.BPActionConstCommon;
+import bp.ui.actions.BPActionHelpers;
 import bp.ui.container.BPToolBarSQ;
 import bp.ui.scomp.BPCodePane;
 import bp.ui.scomp.BPComboBox;
@@ -28,7 +32,7 @@ public class BPToolGUIStringEscape extends BPToolGUIBase<BPToolGUIStringEscape.B
 {
 	public String getName()
 	{
-		return "String Escape";
+		return BPActionHelpers.getValue(BPActionConstCommon.TNAME_STRESCAPE, null, null);
 	}
 
 	protected BPToolGUIContextStringEscape createToolContext()
@@ -85,7 +89,7 @@ public class BPToolGUIStringEscape extends BPToolGUIBase<BPToolGUIStringEscape.B
 	{
 		public String name()
 		{
-			return "DXF With ASCII(\\U+)";
+			return "Classic Style(\\U+)";
 		}
 
 		public String escape(String raw)
@@ -124,15 +128,14 @@ public class BPToolGUIStringEscape extends BPToolGUIBase<BPToolGUIStringEscape.B
 			JPanel psrc = new JPanel();
 			JPanel pdest = new JPanel();
 			JPanel px = new JPanel();
-			BPLabel lblsrc = new BPLabel(" Raw");
-			BPLabel lbldest = new BPLabel(" Escaped");
-			BPLabel lblen = new BPLabel("Function:");
+			BPLabel lblsrc = new BPLabel(" " + BPActionHelpers.getValue(BPActionConstCommon.TXT_RAW, null, null));
+			BPLabel lbldest = new BPLabel(" " + BPActionHelpers.getValue(BPActionConstCommon.TXT_ESCAPED, null, null));
+			BPLabel lblen = new BPLabel(BPLocaleHelpers.getValue(BPLocaleConstCC.FUNCTION) + ":");
 			BPToolBarSQ toolbar = new BPToolBarSQ();
-			Action actdecode = BPAction.build("Unescape").callback(this::onDecode).getAction();
-			Action actencode = BPAction.build("Escape").callback(this::onEncode).getAction();
+			Action actdecode = BPActionHelpers.getAction(BPActionConstCommon.ACT_BTNUNESCAPE, this::onDecode);
+			Action actencode = BPActionHelpers.getAction(BPActionConstCommon.ACT_BTNESCAPE, this::onEncode);
 			toolbar.setBarHeight(UIConfigs.BAR_HEIGHT_COMBO());
-			toolbar.setHasButtonBorder(true);
-			toolbar.setActions(new Action[] { actdecode, BPAction.separator(), actencode, BPAction.separator() });
+			toolbar.setActions(new Action[] { actdecode, BPAction.separator(), actencode, BPAction.separator(), BPAction.separator(), BPAction.separator() });
 			toolbar.add(lblen);
 			toolbar.add(m_cmbfuncs);
 			toolbar.add(px);

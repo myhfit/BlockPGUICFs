@@ -20,11 +20,8 @@ import bp.config.BPConfig;
 import bp.data.BPDataContainer;
 import bp.data.BPDataContainerBase;
 import bp.format.BPFormat;
-import bp.format.BPFormatBMP;
-import bp.format.BPFormatGIF;
-import bp.format.BPFormatJPEG;
+import bp.format.BPFormatFeature;
 import bp.format.BPFormatManager;
-import bp.format.BPFormatPNG;
 import bp.res.BPResource;
 import bp.tool.BPToolGUIDataPipe;
 import bp.ui.BPViewer;
@@ -34,6 +31,7 @@ import bp.ui.res.icon.BPIconResV;
 import bp.ui.scomp.BPImage;
 import bp.ui.util.UIUtil;
 import bp.util.ClipboardUtil;
+import bp.util.ObjUtil;
 import bp.util.Std;
 
 public class BPImagePanel extends JPanel implements BPEditor<JPanel>, BPViewer<BPDataContainer>
@@ -313,7 +311,7 @@ public class BPImagePanel extends JPanel implements BPEditor<JPanel>, BPViewer<B
 	{
 		public String[] getFormats()
 		{
-			return new String[] { BPFormatJPEG.FORMAT_JPEG, BPFormatPNG.FORMAT_PNG, BPFormatGIF.FORMAT_GIF, BPFormatBMP.FORMAT_BMP };
+			return ObjUtil.mappingList(BPFormatManager.getFormatsByFeature(BPFormatFeature.IMAGE), (f -> f.getName()), false).toArray(new String[0]);
 		}
 
 		public BPEditor<?> createEditor(BPFormat format, BPResource res, BPConfig options, Object... params)

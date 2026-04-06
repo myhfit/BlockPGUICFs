@@ -15,6 +15,8 @@ import javax.swing.border.MatteBorder;
 
 import bp.config.UIConfigs;
 import bp.ui.actions.BPAction;
+import bp.ui.actions.BPActionConstCommon;
+import bp.ui.actions.BPActionHelpers;
 import bp.ui.container.BPToolBarSQ;
 import bp.ui.scomp.BPCodePane;
 import bp.ui.scomp.BPLabel;
@@ -54,14 +56,14 @@ public class BPToolGUIJSON extends BPToolGUIBase<BPToolGUIJSON.BPToolGUIContextJ
 			sp.setLayout(new GridLayout(1, 2, 0, 0));
 			JPanel psrc = new JPanel();
 			JPanel pdest = new JPanel();
-			BPLabel lblsrc = new BPLabel(" Raw");
-			BPLabel lbldest = new BPLabel(" Encoded");
+			BPLabel lblsrc = new BPLabel(" " + BPActionHelpers.getValue(BPActionConstCommon.TXT_SOURCE));
+			BPLabel lbldest = new BPLabel(" " + BPActionHelpers.getValue(BPActionConstCommon.TXT_DEST));
 			BPToolBarSQ toolbar = new BPToolBarSQ();
-			Action actdecode = BPAction.build("Decode").callback(this::onDecode).getAction();
-			Action actencode = BPAction.build("Encode").callback(this::onEncode).getAction();
+			Action actdecode = BPActionHelpers.getAction(BPActionConstCommon.TXT_DECODE, this::onDecode);
+			Action actencode = BPActionHelpers.getAction(BPActionConstCommon.TXT_ENCODE, this::onEncode);
 			actencode.setEnabled(false);
-
 			toolbar.setHasButtonBorder(true);
+			toolbar.setBarHeight(UIConfigs.BAR_HEIGHT_COMBO());
 			toolbar.setActions(new Action[] { actdecode, BPAction.separator(), actencode });
 
 			m_scrollsrc.setViewportView(m_src);

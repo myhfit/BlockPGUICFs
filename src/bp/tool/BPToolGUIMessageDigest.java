@@ -29,11 +29,14 @@ import javax.swing.border.CompoundBorder;
 import javax.swing.border.EmptyBorder;
 import javax.swing.border.MatteBorder;
 
-import bp.BPGUICore;
 import bp.config.UIConfigs;
+import bp.locale.BPLocaleConstCC;
+import bp.locale.BPLocaleHelpers;
 import bp.res.BPResource;
 import bp.res.BPResourceFileSystem;
-import bp.ui.actions.BPAction;
+import bp.ui.actions.BPActionConstCFs;
+import bp.ui.actions.BPActionConstCommon;
+import bp.ui.actions.BPActionHelpers;
 import bp.ui.container.BPToolBarSQ;
 import bp.ui.scomp.BPCodePane;
 import bp.ui.scomp.BPComboBox;
@@ -50,7 +53,7 @@ public class BPToolGUIMessageDigest extends BPToolGUIBase<BPToolGUIMessageDigest
 {
 	public String getName()
 	{
-		return "Message Digest";
+		return BPActionHelpers.getValue(BPActionConstCFs.TNAME_MSGDIGEST, null, null);
 	}
 
 	protected BPToolGUIContextMessageDigest createToolContext()
@@ -81,18 +84,18 @@ public class BPToolGUIMessageDigest extends BPToolGUIBase<BPToolGUIMessageDigest
 			JPanel pdest = new JPanel();
 			JPanel px = new JPanel();
 			m_encoding = new BPTextField();
-			BPLabel lblmodes = new BPLabel("Mode:");
-			BPLabel lblen = new BPLabel("Encoding:");
-			BPLabel lblal = new BPLabel("Algorithm:");
+			BPLabel lblmodes = new BPLabel(BPActionHelpers.getValue(BPActionConstCommon.TXT_MODE, null, null) + ":");
+			BPLabel lblen = new BPLabel(BPActionHelpers.getValue(BPActionConstCommon.TXT_ENCODING, null, null) + ":");
+			BPLabel lblal = new BPLabel(BPLocaleHelpers.getValue(BPLocaleConstCC.FUNCTION) + ":");
 			m_al = new BPComboBox<String>();
-			BPLabel lblsrc = new BPLabel(" Source");
-			BPLabel lbldest = new BPLabel(" Result");
+			BPLabel lblsrc = new BPLabel(" " + BPActionHelpers.getValue(BPActionConstCommon.TXT_SOURCE, null, null) + ":");
+			BPLabel lbldest = new BPLabel(" " + BPActionHelpers.getValue(BPActionConstCommon.TXT_RESULT, null, null) + ":");
 			BPToolBarSQ toolbar = new BPToolBarSQ();
 			lblmodes.setLabelFont();
 			m_cbmodes = new BPComboBox<String>();
 			initModes();
-			Action actrun = BPAction.build(" Run ").callback(this::onRun).getAction();
-			toolbar.setHasButtonBorder(true);
+			Action actrun = BPActionHelpers.getActionWithAlias(BPActionConstCommon.ACT_BTNRUN,BPActionConstCommon.ACT_BTNRUN_ACC, this::onRun);
+			toolbar.setBarHeight(UIConfigs.BAR_HEIGHT_COMBO());
 			toolbar.setActions(new Action[] { actrun });
 			toolbar.add(Box.createRigidArea(new Dimension(8, 4)));
 			toolbar.add(lblmodes);
@@ -297,7 +300,7 @@ public class BPToolGUIMessageDigest extends BPToolGUIBase<BPToolGUIMessageDigest
 		{
 			SortedMap<String, Charset> charsetmap = Charset.availableCharsets();
 			List<String> charsetnames = new ArrayList<String>(charsetmap.keySet());
-			String en = UIStd.select(charsetnames, BPGUICore.S_BP_TITLE + " - Select Encoding", null);
+			String en = UIStd.select(charsetnames, UIUtil.wrapBPTitles(BPActionConstCommon.TXT_SEL, BPActionConstCommon.TXT_ENCODING), null);
 			if (en != null)
 				m_encoding.setText(en);
 		}
