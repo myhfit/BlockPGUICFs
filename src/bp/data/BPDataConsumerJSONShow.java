@@ -14,7 +14,7 @@ public class BPDataConsumerJSONShow extends BPDataConsumerTextCollector
 	{
 		super.finish();
 		BPToolGUIJSON t = new BPToolGUIJSON();
-		t.showTool(ObjUtil.makeMap("dest", m_text));
+		t.showTool(ObjUtil.makeMap("src", m_text));
 	}
 
 	public static class BPDataEndpointFactoryJSONShow implements BPDataEndpointFactory

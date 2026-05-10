@@ -27,6 +27,7 @@ import bp.tool.BPToolGUIDataPipe;
 import bp.ui.BPViewer;
 import bp.ui.actions.BPAction;
 import bp.ui.container.BPToolBarSQ;
+import bp.ui.editor.controller.BPEditorController;
 import bp.ui.res.icon.BPIconResV;
 import bp.ui.scomp.BPImage;
 import bp.ui.util.UIUtil;
@@ -50,6 +51,7 @@ public class BPImagePanel extends JPanel implements BPEditor<JPanel>, BPViewer<B
 	protected Action m_actpaste;
 	protected Action[] m_acts;
 	protected String m_id;
+	protected BPEditorController m_ec;
 
 	static
 	{
@@ -58,6 +60,8 @@ public class BPImagePanel extends JPanel implements BPEditor<JPanel>, BPViewer<B
 
 	public BPImagePanel()
 	{
+		m_ec = new BPEditorController(this);
+		
 		init();
 	}
 
@@ -72,6 +76,7 @@ public class BPImagePanel extends JPanel implements BPEditor<JPanel>, BPViewer<B
 		BPAction actzoomout = BPAction.build("-").callback((e) -> zoomout()).vIcon(BPIconResV.DEL()).tooltip("Zoom Out").getAction();
 		BPAction actdatapipe = BPAction.build("pipe").callback(this::sendToDataPipe).vIcon(BPIconResV.PRJSTREE()).tooltip("Send to Data Pipe").getAction();
 		m_toolbar.setActions(new Action[] { BPAction.separator(), actzoomin, actzoomout, actdatapipe });
+		m_toolbar.setNoScrollSize();
 		add(m_ctl, BorderLayout.CENTER);
 		add(m_toolbar, BorderLayout.WEST);
 		initActions();
@@ -305,6 +310,11 @@ public class BPImagePanel extends JPanel implements BPEditor<JPanel>, BPViewer<B
 	public String[] getExts()
 	{
 		return new String[] { ".png", ".jpg", ".jpeg", ".gif", ".bmp" };
+	}
+
+	public BPEditorController getEditorController()
+	{
+		return m_ec;
 	}
 
 	public final static class BPEditorFactoryImage implements BPEditorFactory

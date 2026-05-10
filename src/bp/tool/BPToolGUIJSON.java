@@ -14,6 +14,7 @@ import javax.swing.border.EmptyBorder;
 import javax.swing.border.MatteBorder;
 
 import bp.config.UIConfigs;
+import bp.locale.BPLocaleConstCC;
 import bp.ui.actions.BPAction;
 import bp.ui.actions.BPActionConstCommon;
 import bp.ui.actions.BPActionHelpers;
@@ -41,23 +42,23 @@ public class BPToolGUIJSON extends BPToolGUIBase<BPToolGUIJSON.BPToolGUIContextJ
 
 	protected static class BPToolGUIContextJSON implements BPToolGUIBase.BPToolGUIContext
 	{
-		protected BPTree m_src;
-		protected BPCodePane m_dest;
+		protected BPTree m_dest;
+		protected BPCodePane m_src;
 		protected JScrollPane m_scrollsrc;
 		protected JScrollPane m_scrolldest;
 
 		public void initUI(Container par, Object... params)
 		{
-			m_src = new BPTree();
-			m_dest = new BPCodePane();
+			m_dest = new BPTree();
+			m_src = new BPCodePane();
 			m_scrollsrc = new JScrollPane();
 			m_scrolldest = new JScrollPane();
 			JPanel sp = new JPanel();
 			sp.setLayout(new GridLayout(1, 2, 0, 0));
 			JPanel psrc = new JPanel();
 			JPanel pdest = new JPanel();
-			BPLabel lblsrc = new BPLabel(" " + BPActionHelpers.getValue(BPActionConstCommon.TXT_SOURCE));
-			BPLabel lbldest = new BPLabel(" " + BPActionHelpers.getValue(BPActionConstCommon.TXT_DEST));
+			BPLabel lblsrc = new BPLabel(" " + BPLocaleConstCC.SOURCE.text());
+			BPLabel lbldest = new BPLabel(" " + BPLocaleConstCC.DESTINATION.text());
 			BPToolBarSQ toolbar = new BPToolBarSQ();
 			Action actdecode = BPActionHelpers.getAction(BPActionConstCommon.TXT_DECODE, this::onDecode);
 			Action actencode = BPActionHelpers.getAction(BPActionConstCommon.TXT_ENCODE, this::onEncode);
@@ -73,11 +74,11 @@ public class BPToolGUIJSON extends BPToolGUIBase<BPToolGUIJSON.BPToolGUIContextJ
 			sp.setBorder(new EmptyBorder(0, 0, 0, 0));
 			toolbar.setBorder(new CompoundBorder(new MatteBorder(0, 0, 1, 0, UIConfigs.COLOR_STRONGBORDER()), new EmptyBorder(1, 1, 1, 1)));
 			psrc.setBorder(new MatteBorder(0, 0, 0, 1, UIConfigs.COLOR_STRONGBORDER()));
-			m_src.setRootVisible(false);
-			m_src.setCellRenderer(new BPTreeCellRendererObject());
+			m_dest.setRootVisible(false);
+			m_dest.setCellRenderer(new BPTreeCellRendererObject());
 
-			m_src.setMonoFont();
 			m_dest.setMonoFont();
+			m_src.setMonoFont();
 			lblsrc.setLabelFont();
 			lbldest.setLabelFont();
 
@@ -85,7 +86,7 @@ public class BPToolGUIJSON extends BPToolGUIBase<BPToolGUIJSON.BPToolGUIContextJ
 			sp.add(pdest);
 			psrc.setLayout(new BorderLayout());
 			pdest.setLayout(new BorderLayout());
-			m_dest.setBorder(new EmptyBorder(0, 0, 0, 0));
+			m_src.setBorder(new EmptyBorder(0, 0, 0, 0));
 			lblsrc.setBorder(new MatteBorder(0, 0, 1, 0, UIConfigs.COLOR_WEAKBORDER()));
 			lbldest.setBorder(new MatteBorder(0, 0, 1, 0, UIConfigs.COLOR_WEAKBORDER()));
 			psrc.add(lblsrc, BorderLayout.NORTH);
@@ -99,21 +100,21 @@ public class BPToolGUIJSON extends BPToolGUIBase<BPToolGUIJSON.BPToolGUIContextJ
 		@SuppressWarnings("unchecked")
 		public void initDatas(Object... params)
 		{
-			String dest = null;
+			String src = null;
 			if (params != null && params.length > 0)
 			{
 				Object p0 = params[0];
 				if (p0 instanceof Map)
 				{
 					Map<String, Object> ps = (Map<String, Object>) p0;
-					dest = (String) ps.get("dest");
+					src = (String) ps.get("src");
 				}
 			}
 
-			if (dest != null)
+			if (src != null)
 			{
-				m_dest.setText(dest);
-				setTreeData(JSONUtil.decode(dest));
+				m_src.setText(src);
+				setTreeData(JSONUtil.decode(src));
 			}
 			else
 				setTreeData(null);
@@ -125,13 +126,13 @@ public class BPToolGUIJSON extends BPToolGUIBase<BPToolGUIJSON.BPToolGUIContextJ
 
 		protected void onDecode(ActionEvent e)
 		{
-			UIStd.wrapSeg(() -> setTreeData(JSONUtil.decode(m_dest.getText())));
+			UIStd.wrapSeg(() -> setTreeData(JSONUtil.decode(m_src.getText())));
 		}
 
 		protected void setTreeData(Object data)
 		{
 			BPTreeModel model = new BPTreeModel(new BPTreeFuncsObject(data));
-			m_src.setModel(model);
+			m_dest.setModel(model);
 		}
 	}
 }

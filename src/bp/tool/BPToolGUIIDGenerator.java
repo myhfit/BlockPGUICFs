@@ -20,7 +20,6 @@ import bp.id.UUIDGenerator;
 import bp.locale.BPLocaleConstCC;
 import bp.locale.BPLocaleHelper;
 import bp.locale.BPLocaleHelperDirect;
-import bp.locale.BPLocaleHelpers;
 import bp.locale.BPLocaleVerb;
 import bp.tool.locale.BPLocaleConstTGGens;
 import bp.ui.actions.BPAction;
@@ -73,7 +72,7 @@ public class BPToolGUIIDGenerator extends BPToolGUIBase<BPToolGUIIDGenerator.BPT
 			m_chkoneline = new BPCheckBox(m_lh.v(BPLocaleConstTGGens.ACT_BTNONELINE));
 			m_cmbfuncs = new BPComboBox<GenIDFunc>();
 			BPLabel lblnum = new BPLabel(" " + m_lh.v(BPLocaleConstTGGens.ACT_BTNCOUNT) + ": ");
-			BPLabel lblfunc = new BPLabel(" " + BPLocaleHelpers.getValue(BPLocaleConstCC.FUNCTION) + ": ");
+			BPLabel lblfunc = new BPLabel(" " + BPLocaleConstCC.FUNCTION.text() + ": ");
 			JPanel px = new JPanel();
 			m_txt = tp.getTextPanel();
 

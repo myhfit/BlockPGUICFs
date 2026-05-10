@@ -17,7 +17,6 @@ import javax.swing.border.MatteBorder;
 
 import bp.config.UIConfigs;
 import bp.locale.BPLocaleConstCC;
-import bp.locale.BPLocaleHelpers;
 import bp.ui.actions.BPAction;
 import bp.ui.actions.BPActionConstCommon;
 import bp.ui.actions.BPActionHelpers;
@@ -32,7 +31,7 @@ public class BPToolGUIStringEscape extends BPToolGUIBase<BPToolGUIStringEscape.B
 {
 	public String getName()
 	{
-		return BPActionHelpers.getValue(BPActionConstCommon.TNAME_STRESCAPE, null, null);
+		return BPActionConstCommon.TNAME_STRESCAPE.text();
 	}
 
 	protected BPToolGUIContextStringEscape createToolContext()
@@ -128,9 +127,9 @@ public class BPToolGUIStringEscape extends BPToolGUIBase<BPToolGUIStringEscape.B
 			JPanel psrc = new JPanel();
 			JPanel pdest = new JPanel();
 			JPanel px = new JPanel();
-			BPLabel lblsrc = new BPLabel(" " + BPActionHelpers.getValue(BPActionConstCommon.TXT_RAW, null, null));
-			BPLabel lbldest = new BPLabel(" " + BPActionHelpers.getValue(BPActionConstCommon.TXT_ESCAPED, null, null));
-			BPLabel lblen = new BPLabel(BPLocaleHelpers.getValue(BPLocaleConstCC.FUNCTION) + ":");
+			BPLabel lblsrc = new BPLabel(" " + BPActionConstCommon.TXT_RAW.text());
+			BPLabel lbldest = new BPLabel(" " + BPActionConstCommon.TXT_ESCAPED.text());
+			BPLabel lblen = new BPLabel(BPLocaleConstCC.FUNCTION.text() + ":");
 			BPToolBarSQ toolbar = new BPToolBarSQ();
 			Action actdecode = BPActionHelpers.getAction(BPActionConstCommon.ACT_BTNUNESCAPE, this::onDecode);
 			Action actencode = BPActionHelpers.getAction(BPActionConstCommon.ACT_BTNESCAPE, this::onEncode);

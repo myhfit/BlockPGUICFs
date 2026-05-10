@@ -3,7 +3,6 @@ package bp.tool;
 import java.awt.BorderLayout;
 import java.awt.Container;
 import java.awt.GridLayout;
-import java.awt.Window;
 import java.awt.event.ActionEvent;
 import java.io.FileInputStream;
 import java.io.IOException;
@@ -16,6 +15,7 @@ import java.util.List;
 import javax.swing.Action;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
+import javax.swing.SwingUtilities;
 import javax.swing.border.CompoundBorder;
 import javax.swing.border.EmptyBorder;
 import javax.swing.border.MatteBorder;
@@ -163,7 +163,7 @@ public class BPToolGUIBase64 extends BPToolGUIBase<BPToolGUIBase64.BPToolGUICont
 
 		protected void onEncodeFile(ActionEvent e)
 		{
-			String f = CommonUIOperations.showOpenFileDialog((Window) m_src.getFocusCycleRootAncestor(), "");
+			String f = CommonUIOperations.showOpenFileDialog(SwingUtilities.getWindowAncestor(m_src), "");
 			if (f != null)
 			{
 				try (FileInputStream fis = new FileInputStream(f))

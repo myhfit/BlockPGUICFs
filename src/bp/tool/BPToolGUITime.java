@@ -26,6 +26,7 @@ import javax.swing.border.EmptyBorder;
 import javax.swing.border.MatteBorder;
 
 import bp.config.UIConfigs;
+import bp.locale.BPLocaleConstCC;
 import bp.locale.BPLocaleHelper;
 import bp.locale.BPLocaleHelperDirect;
 import bp.locale.BPLocaleVerb;
@@ -75,7 +76,7 @@ public class BPToolGUITime extends BPToolGUIBase<BPToolGUITime.BPToolGUIContextT
 			JPanel pdest = new JPanel();
 			JPanel psrcbox = new JPanel();
 			JPanel pdestbox = new JPanel();
-			BPLabel lblsrc = new BPLabel(" " + BPActionHelpers.getValue(BPActionConstCommon.TXT_SOURCE));
+			BPLabel lblsrc = new BPLabel(" " + BPLocaleConstCC.SOURCE.text());
 			BPLabel lbldest = new BPLabel(" " + BPActionHelpers.getValue(BPActionConstCommon.TXT_TIME));
 
 			sp.setBorder(new EmptyBorder(0, 0, 0, 0));

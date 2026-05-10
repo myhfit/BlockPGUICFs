@@ -4,7 +4,6 @@ import java.awt.BorderLayout;
 import java.awt.Container;
 import java.awt.Dimension;
 import java.awt.GridLayout;
-import java.awt.Window;
 import java.awt.event.ActionEvent;
 import java.awt.event.ItemEvent;
 import java.awt.event.MouseEvent;
@@ -25,13 +24,13 @@ import javax.swing.Box;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTextField;
+import javax.swing.SwingUtilities;
 import javax.swing.border.CompoundBorder;
 import javax.swing.border.EmptyBorder;
 import javax.swing.border.MatteBorder;
 
 import bp.config.UIConfigs;
 import bp.locale.BPLocaleConstCC;
-import bp.locale.BPLocaleHelpers;
 import bp.res.BPResource;
 import bp.res.BPResourceFileSystem;
 import bp.ui.actions.BPActionConstCFs;
@@ -53,7 +52,7 @@ public class BPToolGUIMessageDigest extends BPToolGUIBase<BPToolGUIMessageDigest
 {
 	public String getName()
 	{
-		return BPActionHelpers.getValue(BPActionConstCFs.TNAME_MSGDIGEST, null, null);
+		return BPActionConstCFs.TNAME_MSGDIGEST.text();
 	}
 
 	protected BPToolGUIContextMessageDigest createToolContext()
@@ -84,12 +83,12 @@ public class BPToolGUIMessageDigest extends BPToolGUIBase<BPToolGUIMessageDigest
 			JPanel pdest = new JPanel();
 			JPanel px = new JPanel();
 			m_encoding = new BPTextField();
-			BPLabel lblmodes = new BPLabel(BPActionHelpers.getValue(BPActionConstCommon.TXT_MODE, null, null) + ":");
-			BPLabel lblen = new BPLabel(BPActionHelpers.getValue(BPActionConstCommon.TXT_ENCODING, null, null) + ":");
-			BPLabel lblal = new BPLabel(BPLocaleHelpers.getValue(BPLocaleConstCC.FUNCTION) + ":");
+			BPLabel lblmodes = new BPLabel(BPActionConstCommon.TXT_MODE.text() + ":");
+			BPLabel lblen = new BPLabel(BPLocaleConstCC.ENCODING.text() + ":");
+			BPLabel lblal = new BPLabel(BPLocaleConstCC.FUNCTION.text() + ":");
 			m_al = new BPComboBox<String>();
-			BPLabel lblsrc = new BPLabel(" " + BPActionHelpers.getValue(BPActionConstCommon.TXT_SOURCE, null, null) + ":");
-			BPLabel lbldest = new BPLabel(" " + BPActionHelpers.getValue(BPActionConstCommon.TXT_RESULT, null, null) + ":");
+			BPLabel lblsrc = new BPLabel(" " + BPLocaleConstCC.SOURCE.text() + ":");
+			BPLabel lbldest = new BPLabel(" " + BPActionConstCommon.TXT_RESULT.text() + ":");
 			BPToolBarSQ toolbar = new BPToolBarSQ();
 			lblmodes.setLabelFont();
 			m_cbmodes = new BPComboBox<String>();
@@ -178,7 +177,7 @@ public class BPToolGUIMessageDigest extends BPToolGUIBase<BPToolGUIMessageDigest
 				{
 					if (m_filenames == null || m_filenames.length == 0)
 					{
-						String[] filenames = CommonUIOperations.showOpenFilesDialog((Window) m_src.getFocusCycleRootAncestor());
+						String[] filenames = CommonUIOperations.showOpenFilesDialog(SwingUtilities.getWindowAncestor(m_src), null, null);
 						setFilenames(filenames);
 					}
 				}
@@ -300,7 +299,7 @@ public class BPToolGUIMessageDigest extends BPToolGUIBase<BPToolGUIMessageDigest
 		{
 			SortedMap<String, Charset> charsetmap = Charset.availableCharsets();
 			List<String> charsetnames = new ArrayList<String>(charsetmap.keySet());
-			String en = UIStd.select(charsetnames, UIUtil.wrapBPTitles(BPActionConstCommon.TXT_SEL, BPActionConstCommon.TXT_ENCODING), null);
+			String en = UIStd.select(charsetnames, UIUtil.wrapBPTitles(BPActionConstCommon.TXT_SEL, BPLocaleConstCC.ENCODING), null);
 			if (en != null)
 				m_encoding.setText(en);
 		}
@@ -340,7 +339,7 @@ public class BPToolGUIMessageDigest extends BPToolGUIBase<BPToolGUIMessageDigest
 			{
 				String[] filenames = m_filenames;
 				if (filenames == null)
-					filenames = CommonUIOperations.showOpenFilesDialog((Window) m_src.getFocusCycleRootAncestor());
+					filenames = CommonUIOperations.showOpenFilesDialog(SwingUtilities.getWindowAncestor(m_src), null, null);
 				if (filenames != null && filenames.length > 0)
 				{
 					m_filenames = filenames;
@@ -385,7 +384,7 @@ public class BPToolGUIMessageDigest extends BPToolGUIBase<BPToolGUIMessageDigest
 				}
 				else if (tartype == 1)
 				{
-					String filename = CommonUIOperations.showSaveFileDialog((Window) m_src.getFocusCycleRootAncestor());
+					String filename = CommonUIOperations.showSaveFileDialog(SwingUtilities.getWindowAncestor(m_src), null);
 					if (filename != null && filename.length() > 0)
 					{
 						try (FileOutputStream fos = new FileOutputStream(filename))

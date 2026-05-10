@@ -6,6 +6,7 @@ import java.awt.image.WritableRaster;
 import java.lang.ref.WeakReference;
 
 import javax.swing.Action;
+import javax.swing.SwingUtilities;
 
 import bp.BPGUICore;
 import bp.data.BPDataContainerRandomAccess;
@@ -67,6 +68,6 @@ public class BPExtensionActionRawCFs
 		imgcomp.zoom(1f);
 		imgcomp.setZoomIntMode(true);
 		imgcomp.setSize(new Dimension());
-		BPDialogSimple.showComponent(imgcomp, BPDialogSimple.COMMANDBAR_OKESCAPE, null, BPGUICore.S_BP_TITLE + " - Overview(Image)", editor.getFocusCycleRootAncestor());
+		BPDialogSimple.showComponent(imgcomp, BPDialogSimple.COMMANDBAR_OKESCAPE, null, BPGUICore.S_BP_TITLE + " - Overview(Image)", SwingUtilities.getWindowAncestor(editor));
 	}
 }

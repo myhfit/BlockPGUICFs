@@ -17,6 +17,7 @@ import javax.swing.border.EmptyBorder;
 import javax.swing.border.MatteBorder;
 
 import bp.config.UIConfigs;
+import bp.locale.BPLocaleConstCC;
 import bp.ui.actions.BPAction;
 import bp.ui.actions.BPActionConstCFs;
 import bp.ui.actions.BPActionConstCommon;
@@ -60,9 +61,9 @@ public class BPToolGUIURLEncoding extends BPToolGUIBase<BPToolGUIURLEncoding.BPT
 			JPanel psrc = new JPanel();
 			JPanel pdest = new JPanel();
 			JPanel px = new JPanel();
-			BPLabel lblsrc = new BPLabel(" " + BPActionHelpers.getValue(BPActionConstCommon.TXT_RAW));
-			BPLabel lbldest = new BPLabel(" " + BPActionHelpers.getValue(BPActionConstCommon.TXT_ESCAPED));
-			BPLabel lblen = new BPLabel(BPActionHelpers.getValue(BPActionConstCommon.TXT_ENCODING) + ":");
+			BPLabel lblsrc = new BPLabel(" " + BPActionConstCommon.TXT_RAW.text());
+			BPLabel lbldest = new BPLabel(" " + BPActionConstCommon.TXT_ESCAPED.text());
+			BPLabel lblen = new BPLabel(BPLocaleConstCC.ENCODING.text() + ":");
 			BPToolBarSQ toolbar = new BPToolBarSQ();
 			Action actdecode = BPActionHelpers.getAction(BPActionConstCommon.TXT_DECODE, this::onDecode);
 			Action actencode = BPActionHelpers.getAction(BPActionConstCommon.TXT_ENCODE, this::onEncode);

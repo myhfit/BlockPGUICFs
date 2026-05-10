@@ -32,6 +32,7 @@ import bp.ui.BPViewer;
 import bp.ui.actions.BPAction;
 import bp.ui.container.BPEditors.BPEventUIEditors;
 import bp.ui.container.BPToolBarSQ;
+import bp.ui.editor.controller.BPEditorController;
 import bp.ui.res.icon.BPIconResV;
 import bp.ui.scomp.BPImage;
 import bp.util.ClipboardUtil;
@@ -56,6 +57,7 @@ public class BPImagesPanel extends JPanel implements BPEditor<JPanel>, BPViewer<
 	protected int m_channelid;
 	protected BPToolBarSQ m_toolbar;
 	protected Action[] m_acts;
+	protected BPEditorController m_ec;
 
 	private String m_id;
 
@@ -66,6 +68,7 @@ public class BPImagesPanel extends JPanel implements BPEditor<JPanel>, BPViewer<
 
 	public BPImagesPanel()
 	{
+		m_ec = new BPEditorController(this);
 		init();
 	}
 
@@ -385,6 +388,11 @@ public class BPImagesPanel extends JPanel implements BPEditor<JPanel>, BPViewer<
 	public Action[] getEditMenuActions()
 	{
 		return m_acts;
+	}
+
+	public BPEditorController getEditorController()
+	{
+		return m_ec;
 	}
 
 	public final static class BPEditorFactoryImages implements BPEditorFactory

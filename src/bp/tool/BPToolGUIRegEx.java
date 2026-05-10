@@ -28,7 +28,7 @@ public class BPToolGUIRegEx extends BPToolGUIBase<BPToolGUIRegEx.BPToolGUIContex
 {
 	public String getName()
 	{
-		return BPActionHelpers.getValue(BPActionConstCFs.TXT_REGEXP, null, null);
+		return BPActionConstCFs.TXT_REGEXP.text();
 	}
 
 	protected BPToolGUIContextRegEx createToolContext()
@@ -53,8 +53,8 @@ public class BPToolGUIRegEx extends BPToolGUIBase<BPToolGUIRegEx.BPToolGUIContex
 			sp.setLayout(new GridLayout(1, 2, 0, 0));
 			JPanel pregex = new JPanel();
 			JPanel pdata = new JPanel();
-			BPLabel lblregex = new BPLabel(" " + BPActionHelpers.getValue(BPActionConstCFs.TXT_REGEXP));
-			BPLabel lbldata = new BPLabel(" " + BPActionHelpers.getValue(BPActionConstCommon.TXT_DATA));
+			BPLabel lblregex = new BPLabel(" " + BPActionConstCFs.TXT_REGEXP.text());
+			BPLabel lbldata = new BPLabel(" " + BPActionConstCommon.TXT_DATA.text());
 			BPToolBarSQ toolbar = new BPToolBarSQ();
 			Action actfind = BPActionHelpers.getAction(BPActionConstCommon.FDLG_FIND, this::onFind);
 			Action actmatch = BPActionHelpers.getAction(BPActionConstCommon.FDLG_MATCH, this::onMatch);

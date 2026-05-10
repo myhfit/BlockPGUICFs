@@ -20,6 +20,7 @@ import javax.swing.JComponent;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.SwingConstants;
+import javax.swing.SwingUtilities;
 import javax.swing.border.CompoundBorder;
 import javax.swing.border.EmptyBorder;
 import javax.swing.border.MatteBorder;
@@ -27,7 +28,6 @@ import javax.swing.border.MatteBorder;
 import bp.config.UIConfigs;
 import bp.ui.actions.BPAction;
 import bp.ui.actions.BPActionConstCFs;
-import bp.ui.actions.BPActionHelpers;
 import bp.ui.container.BPToolBarSQ;
 import bp.ui.scomp.BPCodePane;
 import bp.ui.scomp.BPComboBox;
@@ -38,7 +38,7 @@ public class BPToolGUIClipboard extends BPToolGUIBase<BPToolGUIClipboard.BPToolG
 {
 	public String getName()
 	{
-		return BPActionHelpers.getValue(BPActionConstCFs.TXT_CLIPBOARD, null, null);
+		return BPActionConstCFs.TXT_CLIPBOARD.text();
 	}
 
 	protected BPToolGUIContextClipboard createToolContext()
@@ -100,7 +100,7 @@ public class BPToolGUIClipboard extends BPToolGUIBase<BPToolGUIClipboard.BPToolG
 
 		protected Transferable readClipboardTypes()
 		{
-			Window w = (Window) m_scrollsrc.getFocusCycleRootAncestor();
+			Window w = SwingUtilities.getWindowAncestor(m_scrollsrc);
 			Clipboard clip = w.getToolkit().getSystemClipboard();
 			Transferable tdata = clip.getContents(null);
 			if (tdata != null)
@@ -204,7 +204,7 @@ public class BPToolGUIClipboard extends BPToolGUIBase<BPToolGUIClipboard.BPToolG
 		{
 			if (e.getStateChange() == ItemEvent.SELECTED)
 			{
-				Window w = (Window) m_scrollsrc.getFocusCycleRootAncestor();
+				Window w = SwingUtilities.getWindowAncestor(m_scrollsrc);
 				Clipboard clip = w.getToolkit().getSystemClipboard();
 				Transferable tdata = clip.getContents(null);
 				UIStd.wrapSeg(() -> setClipboardComp(tdata));
