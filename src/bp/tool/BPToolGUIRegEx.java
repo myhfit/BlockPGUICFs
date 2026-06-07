@@ -68,6 +68,8 @@ public class BPToolGUIRegEx extends BPToolGUIBase<BPToolGUIRegEx.BPToolGUIContex
 			m_scrolldata.setViewportView(m_data);
 			m_scrollregex.setBorder(new EmptyBorder(0, 0, 0, 0));
 			m_scrolldata.setBorder(new EmptyBorder(0, 0, 0, 0));
+			m_scrollregex.addMouseWheelListener(m_regex::onMouseWheelZoom);
+			m_scrolldata.addMouseWheelListener(m_data::onMouseWheelZoom);
 			sp.setBorder(new EmptyBorder(0, 0, 0, 0));
 			toolbar.setBorder(new CompoundBorder(new MatteBorder(0, 0, 1, 0, UIConfigs.COLOR_STRONGBORDER()), new EmptyBorder(1, 1, 1, 1)));
 			pregex.setBorder(new MatteBorder(0, 0, 0, 1, UIConfigs.COLOR_STRONGBORDER()));

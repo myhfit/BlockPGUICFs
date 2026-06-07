@@ -233,11 +233,11 @@ public class BPXMLPanel extends BPCodeAndPreviewPanel<BPTreeComponent<BPTree>>
 		m_sp.removeAll();
 	}
 
-	public void toggleRightPanel()
+	public void toggleRightPanel(Boolean v)
 	{
 		if (m_ispmode)
 			return;
-		boolean canpreview = !m_canpreview;
+		boolean canpreview = (v != null ? v : (!m_canpreview));
 		m_canpreview = canpreview;
 		if (canpreview)
 		{

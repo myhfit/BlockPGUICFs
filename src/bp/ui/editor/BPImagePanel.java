@@ -3,8 +3,6 @@ package bp.ui.editor;
 import java.awt.BorderLayout;
 import java.awt.Image;
 import java.awt.event.ActionEvent;
-import java.awt.event.InputEvent;
-import java.awt.event.KeyEvent;
 import java.awt.image.RenderedImage;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
@@ -14,7 +12,6 @@ import java.util.function.Consumer;
 import javax.imageio.ImageIO;
 import javax.swing.Action;
 import javax.swing.JPanel;
-import javax.swing.KeyStroke;
 
 import bp.config.BPConfig;
 import bp.data.BPDataContainer;
@@ -26,6 +23,8 @@ import bp.res.BPResource;
 import bp.tool.BPToolGUIDataPipe;
 import bp.ui.BPViewer;
 import bp.ui.actions.BPAction;
+import bp.ui.actions.BPActionConstCommon;
+import bp.ui.actions.BPActionHelpers;
 import bp.ui.container.BPToolBarSQ;
 import bp.ui.editor.controller.BPEditorController;
 import bp.ui.res.icon.BPIconResV;
@@ -76,7 +75,6 @@ public class BPImagePanel extends JPanel implements BPEditor<JPanel>, BPViewer<B
 		BPAction actzoomout = BPAction.build("-").callback((e) -> zoomout()).vIcon(BPIconResV.DEL()).tooltip("Zoom Out").getAction();
 		BPAction actdatapipe = BPAction.build("pipe").callback(this::sendToDataPipe).vIcon(BPIconResV.PRJSTREE()).tooltip("Send to Data Pipe").getAction();
 		m_toolbar.setActions(new Action[] { BPAction.separator(), actzoomin, actzoomout, actdatapipe });
-		m_toolbar.setNoScrollSize();
 		add(m_ctl, BorderLayout.CENTER);
 		add(m_toolbar, BorderLayout.WEST);
 		initActions();
@@ -84,8 +82,8 @@ public class BPImagePanel extends JPanel implements BPEditor<JPanel>, BPViewer<B
 
 	protected void initActions()
 	{
-		m_actcopy = BPAction.build("Copy").callback(this::onCopy).acceleratorKey(KeyStroke.getKeyStroke(KeyEvent.VK_C, InputEvent.CTRL_DOWN_MASK)).mnemonicKey(KeyEvent.VK_C).getAction();
-		m_actpaste = BPAction.build("Paste").callback(this::onPaste).acceleratorKey(KeyStroke.getKeyStroke(KeyEvent.VK_V, InputEvent.CTRL_DOWN_MASK)).mnemonicKey(KeyEvent.VK_P).getAction();
+		m_actcopy = BPActionHelpers.getActionWithAlias(BPActionConstCommon.CTX_MNUCOPY, BPActionConstCommon.CTX_MNUCOPY_ACC, this::onCopy);
+		m_actpaste = BPActionHelpers.getActionWithAlias(BPActionConstCommon.CTX_MNUPASTE, BPActionConstCommon.CTX_MNUPASTE_ACC, this::onPaste);
 		m_acts = new Action[] { m_actcopy, m_actpaste };
 	}
 

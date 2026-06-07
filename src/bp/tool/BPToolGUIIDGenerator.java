@@ -93,6 +93,7 @@ public class BPToolGUIIDGenerator extends BPToolGUIBase<BPToolGUIIDGenerator.BPT
 			m_txt.setEditable(false);
 
 			toolbar.setHasButtonBorder(true);
+			toolbar.setBarHeight(UIConfigs.BAR_HEIGHT_COMBO());
 			toolbar.setActions(new Action[] { actclear, BPAction.separator(), actgen });
 			toolbar.setBorder(new CompoundBorder(new MatteBorder(0, 0, 1, 0, UIConfigs.COLOR_WEAKBORDER()), new EmptyBorder(1, 1, 1, 1)));
 

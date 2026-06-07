@@ -36,6 +36,11 @@ public class BPDSVEditor extends BPXYDEditor<BPXYDContainer>
 		return new BPDSVActions(this);
 	}
 
+	protected void postInitTable()
+	{
+		m_funcs.setColCheck(true);
+	}
+
 	protected BPXYDData createSaveData(String[] colnames, Class<?>[] colclasses, String[] collabels, List<BPXData> datas)
 	{
 		BPDSVData xydata = new BPDSVData();

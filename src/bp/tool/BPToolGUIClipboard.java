@@ -33,6 +33,7 @@ import bp.ui.scomp.BPCodePane;
 import bp.ui.scomp.BPComboBox;
 import bp.ui.scomp.BPLabel;
 import bp.ui.util.UIStd;
+import bp.util.ObjUtil;
 
 public class BPToolGUIClipboard extends BPToolGUIBase<BPToolGUIClipboard.BPToolGUIContextClipboard>
 {
@@ -52,6 +53,7 @@ public class BPToolGUIClipboard extends BPToolGUIBase<BPToolGUIClipboard.BPToolG
 		protected BPComboBox<DataFlavor> m_cmbdf;
 		protected BPComboBox.BPComboBoxModel<DataFlavor> m_cmbmodel;
 		protected JComponent m_content;
+		protected boolean m_rdcts;
 
 		public void initUI(Container par, Object... params)
 		{
@@ -110,7 +112,7 @@ public class BPToolGUIClipboard extends BPToolGUIBase<BPToolGUIClipboard.BPToolG
 				for (DataFlavor df : dfarr)
 				{
 					Class<?> cls = df.getRepresentationClass();
-					if (cls == String.class || cls == Image.class)
+					if (cls == String.class || cls == Image.class || cls == List.class)
 						dfs.add(df);
 				}
 				m_cmbmodel.setDatas(dfs);
@@ -122,6 +124,7 @@ public class BPToolGUIClipboard extends BPToolGUIBase<BPToolGUIClipboard.BPToolG
 			return tdata;
 		}
 
+		@SuppressWarnings("unchecked")
 		protected void setClipboardComp(Transferable tdata)
 		{
 			DataFlavor df = (DataFlavor) m_cmbdf.getSelectedItem();
@@ -152,6 +155,11 @@ public class BPToolGUIClipboard extends BPToolGUIBase<BPToolGUIClipboard.BPToolG
 						Image img = (Image) tdata.getTransferData(df);
 						setImageComp(img);
 					}
+					else if (cls == List.class)
+					{
+						List<String> filelist = (List<String>) tdata.getTransferData(df);
+						setTextComp(ObjUtil.joinDatas(filelist, "\n", null, false));
+					}
 				}
 			}
 			catch (UnsupportedFlavorException | IOException e)
@@ -176,7 +184,7 @@ public class BPToolGUIClipboard extends BPToolGUIBase<BPToolGUIClipboard.BPToolG
 			{
 				cp = (BPLabel) comp;
 			}
-			cp.setIcon(new ImageIcon(img));
+			cp.setIcon(img == null ? null : new ImageIcon(img));
 		}
 
 		protected void setTextComp(String text)
@@ -202,7 +210,7 @@ public class BPToolGUIClipboard extends BPToolGUIBase<BPToolGUIClipboard.BPToolG
 
 		protected void onDFChanged(ItemEvent e)
 		{
-			if (e.getStateChange() == ItemEvent.SELECTED)
+			if (e.getStateChange() == ItemEvent.SELECTED && !m_rdcts)
 			{
 				Window w = SwingUtilities.getWindowAncestor(m_scrollsrc);
 				Clipboard clip = w.getToolkit().getSystemClipboard();
@@ -215,7 +223,9 @@ public class BPToolGUIClipboard extends BPToolGUIBase<BPToolGUIClipboard.BPToolG
 		{
 			m_cmbdf.setSelectedIndex(-1);
 			Transferable data = readClipboardTypes();
+			m_rdcts = true;
 			UIStd.wrapSeg(() -> setClipboardComp(data));
+			m_rdcts = false;
 		}
 	}
 }
