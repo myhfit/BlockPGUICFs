@@ -1,6 +1,10 @@
 package bp.ui.editor;
 
+import java.awt.event.ActionEvent;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import bp.config.BPConfig;
 import bp.config.BPSetting;
@@ -12,6 +16,7 @@ import bp.data.BPDataContainer;
 import bp.data.BPXData;
 import bp.data.BPXYDContainer;
 import bp.data.BPXYDData;
+import bp.data.BPXYData;
 import bp.format.BPFormat;
 import bp.format.BPFormatCSV;
 import bp.format.BPFormatDSV;
@@ -19,9 +24,15 @@ import bp.format.BPFormatFeature;
 import bp.format.BPFormatManager;
 import bp.format.BPFormatTSV;
 import bp.res.BPResource;
+import bp.res.BPResourceDir;
 import bp.ui.actions.BPActionHolder;
 import bp.ui.actions.BPDSVActions;
+import bp.ui.scomp.BPTable.BPTableModel;
+import bp.ui.util.CommonUIOperations;
+import bp.ui.util.UIStd;
 import bp.util.LogicUtil;
+import bp.util.ObjUtil;
+import bp.util.Std;
 import bp.util.TextUtil;
 
 public class BPDSVEditor extends BPXYDEditor<BPXYDContainer>
@@ -81,6 +92,134 @@ public class BPDSVEditor extends BPXYDEditor<BPXYDContainer>
 		{
 			return null;
 		}
+	}
+
+	public void showSplit(ActionEvent e)
+	{
+		Integer n = ObjUtil.toInt(UIStd.input("100", "Input Split Number", null), null);
+		if (n != null)
+		{
+			BPResource res = CommonUIOperations.showSaveResource(null, getExts(), null);
+			if (res != null)
+			{
+				BPResourceDir dir = (BPResourceDir) res.getParentResource();
+				String suffix = res.getName();
+				String ext = res.getExt();
+				suffix = suffix.substring(0, suffix.length() - ext.length());
+				saveSplitDSV(n, dir, suffix, ext);
+			}
+		}
+	}
+
+	public void saveSplitDSV(int splitnum, BPResourceDir dir, String suffix, String ext)
+	{
+		List<BPXData> datas = m_model.getDatas();
+		int n = datas.size();
+		BPDSVContainer con = (BPDSVContainer) m_con;
+		for (int i = 0; i < n; i += splitnum)
+		{
+			List<BPXData> subdatas = new ArrayList<BPXData>();
+			for (int j = i; j < (i + splitnum) && j < n; j++)
+				subdatas.add(datas.get(j));
+			BPXYDData xydata = createSaveData(m_funcs.getColumnNames(), m_funcs.getColumnClasses(), m_funcs.getColumnLabels(), subdatas);
+			BPResource sres = dir.getChild(suffix + "_" + i + ext, false);
+			String encoding = con == null ? "utf-8" : con.getEncoding();
+			String delimiter = ",";
+			{
+				BPFormat format = BPFormatManager.getFormatByExt(ext);
+				if (format == null || (!format.checkFeature(BPFormatFeature.DSV)))
+					format = new BPFormatCSV();
+				delimiter = ((BPFormatDSV) format).getDelimiter();
+			}
+
+			try (BPDSVContainer newcon = new BPDSVContainer(encoding, delimiter))
+			{
+				newcon.bind(sres);
+				newcon.open();
+				newcon.writeXYData(xydata);
+			}
+			finally
+			{
+			}
+		}
+		UIStd.info("Split finished");
+	}
+
+	public void showAppendDSV(ActionEvent e)
+	{
+		BPResource[] ress = CommonUIOperations.showSelectResources(null, dlg -> dlg.setFilterWithExts(new String[] { ".csv", ".dsv" }));
+		if (ress != null && ress.length > 0)
+			doAppendDSV(ress);
+	}
+
+	public void doAppendDSV(BPResource[] ress)
+	{
+		int colsize;
+		Map<String, Integer> colmap = new HashMap<>();
+		{
+			String[] cls = m_funcs.getColumnLabels();
+			if (cls != null)
+			{
+				for (int i = 0; i < cls.length; i++)
+					colmap.put(cls[i], i);
+			}
+			colsize = cls.length;
+		}
+		int total = ress.length;
+		int c = 0;
+
+		BPTableModel<BPXData> model = m_model;
+		for (BPResource res : ress)
+		{
+			String en = m_con == null ? "utf-8" : ((BPDSVContainer) m_con).getEncoding();
+
+			String delimiter;
+			{
+				BPFormat format = BPFormatManager.getFormatByExt(res.getExt());
+				if (format != null && format.checkFeature(BPFormatFeature.DSV))
+					delimiter = ((BPFormatDSV) format).getDelimiter();
+				else
+					delimiter = ",";
+			}
+			try (BPDSVContainer con = new BPDSVContainer(en, delimiter))
+			{
+				con.bind(res);
+				con.open();
+				BPXYData xydata = con.readXYData();
+				String[] cls = xydata.getColumnLabels();
+				if (cls == null)
+					cls = xydata.getColumnNames();
+				int[] colidcies = new int[cls.length];
+				for (int i = 0; i < cls.length; i++)
+				{
+					String cl = cls[i];
+					Integer idx = colmap.get(cl);
+					colidcies[i] = idx == null ? -1 : idx;
+				}
+				List<BPXData> lines = xydata.getDatas();
+				List<BPXData> newlines = new ArrayList<BPXData>();
+				for (BPXData line : lines)
+				{
+					Object[] newlinearr = new Object[colsize];
+					for (int i = 0; i < line.length(); i++)
+					{
+						int colidx = colidcies[i];
+						if (colidx > -1)
+							newlinearr[colidx] = line.getColValue(i);
+					}
+					BPXData newline = new BPXData.BPXDataArray(newlinearr);
+					newlines.add(newline);
+				}
+				model.addAll(newlines);
+				model.fireTableDataChanged();
+				c++;
+			}
+			catch (Exception e)
+			{
+				Std.err(e);
+			}
+		}
+		UIStd.info("success:" + c + "/" + total);
 	}
 
 	public final static class BPEditorFactoryDSV implements BPEditorFactory

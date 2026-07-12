@@ -10,14 +10,12 @@ import java.awt.event.MouseEvent;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.nio.charset.Charset;
 import java.security.NoSuchAlgorithmException;
 import java.security.Security;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Set;
-import java.util.SortedMap;
 
 import javax.swing.Action;
 import javax.swing.Box;
@@ -297,9 +295,7 @@ public class BPToolGUIMessageDigest extends BPToolGUIBase<BPToolGUIMessageDigest
 
 		protected void onSelectEncoding(MouseEvent e)
 		{
-			SortedMap<String, Charset> charsetmap = Charset.availableCharsets();
-			List<String> charsetnames = new ArrayList<String>(charsetmap.keySet());
-			String en = UIStd.select(charsetnames, UIUtil.wrapBPTitles(BPActionConstCommon.TXT_SEL, BPLocaleConstCC.ENCODING), null);
+			String en=CommonUIOperations.showSelectCharset(m_encoding.getText());
 			if (en != null)
 				m_encoding.setText(en);
 		}

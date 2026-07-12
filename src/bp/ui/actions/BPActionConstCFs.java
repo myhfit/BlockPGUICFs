@@ -8,12 +8,15 @@ public enum BPActionConstCFs implements BPActionConst
 	TNAME_IDGEN,
 	TNAME_IMGGEN,
 	TNAME_RANDOMGEN,
-	TNAME_URLENCODING
+	TNAME_URLENCODING,
 	
+	CTX_MNUBOLD,
+	CTX_MNUBOLD_ACC,
+	CTX_MNUITALIC,
 	;
 
 	public String getPackName()
 	{
-		return "cfs";
+		return "ac_cfs";
 	}
 }

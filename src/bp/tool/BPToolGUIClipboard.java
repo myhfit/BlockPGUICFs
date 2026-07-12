@@ -124,7 +124,6 @@ public class BPToolGUIClipboard extends BPToolGUIBase<BPToolGUIClipboard.BPToolG
 			return tdata;
 		}
 
-		@SuppressWarnings("unchecked")
 		protected void setClipboardComp(Transferable tdata)
 		{
 			DataFlavor df = (DataFlavor) m_cmbdf.getSelectedItem();
@@ -157,7 +156,7 @@ public class BPToolGUIClipboard extends BPToolGUIBase<BPToolGUIClipboard.BPToolG
 					}
 					else if (cls == List.class)
 					{
-						List<String> filelist = (List<String>) tdata.getTransferData(df);
+						List<?> filelist = (List<?>) tdata.getTransferData(df);
 						setTextComp(ObjUtil.joinDatas(filelist, "\n", null, false));
 					}
 				}
