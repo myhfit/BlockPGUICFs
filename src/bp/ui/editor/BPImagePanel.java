@@ -261,15 +261,6 @@ public class BPImagePanel extends JPanel implements BPEditor<JPanel>, BPViewer<B
 	{
 	}
 
-	public boolean needSave()
-	{
-		return false;
-	}
-
-	public void setNeedSave(boolean needsave)
-	{
-	}
-
 	public void setID(String id)
 	{
 		m_id = id;
@@ -283,6 +274,7 @@ public class BPImagePanel extends JPanel implements BPEditor<JPanel>, BPViewer<B
 	public void setChannelID(int channelid)
 	{
 		m_channelid = channelid;
+		m_ec.setChannelID(channelid);
 	}
 
 	public int getChannelID()

@@ -327,8 +327,9 @@ public class BPImagesPanel extends JPanel implements BPEditor<JPanel>, BPViewer<
 		this.requestFocus();
 	}
 
-	public void save()
+	public boolean isNoSave()
 	{
+		return true;
 	}
 
 	public String getImageFormat()
@@ -340,19 +341,6 @@ public class BPImagesPanel extends JPanel implements BPEditor<JPanel>, BPViewer<
 			return BPFormatManager.getFormatByExt(ext).getName();
 		}
 		return "png";
-	}
-
-	public void reloadData()
-	{
-	}
-
-	public boolean needSave()
-	{
-		return false;
-	}
-
-	public void setNeedSave(boolean needsave)
-	{
 	}
 
 	public void setID(String id)
@@ -368,6 +356,7 @@ public class BPImagesPanel extends JPanel implements BPEditor<JPanel>, BPViewer<
 	public void setChannelID(int channelid)
 	{
 		m_channelid = channelid;
+		m_ec.setChannelID(channelid);
 	}
 
 	public int getChannelID()

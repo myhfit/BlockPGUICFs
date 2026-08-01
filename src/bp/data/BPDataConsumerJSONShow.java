@@ -21,7 +21,7 @@ public class BPDataConsumerJSONShow extends BPDataConsumerTextCollector
 	{
 		public String getName()
 		{
-			return "Parse JSON";
+			return "Show JSON UI";
 		}
 
 		@SuppressWarnings("unchecked")

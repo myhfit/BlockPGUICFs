@@ -34,7 +34,6 @@ import bp.tool.locale.BPLocaleConstTGTime;
 import bp.ui.actions.BPAction;
 import bp.ui.actions.BPActionConstCommon;
 import bp.ui.actions.BPActionHelpers;
-import bp.ui.dialog.BPDialogSelectData;
 import bp.ui.scomp.BPComboBox;
 import bp.ui.scomp.BPComboBox.BPComboBoxModel;
 import bp.ui.scomp.BPLabel;
@@ -227,17 +226,10 @@ public class BPToolGUITime extends BPToolGUIBase<BPToolGUITime.BPToolGUIContextT
 		protected void onSelectTimeZone(ActionEvent e)
 		{
 			List<TimeZone> tzs = m_cmbzones.getBPModel().getDatas();
-			BPDialogSelectData<TimeZone> dlg = new BPDialogSelectData<TimeZone>();
-			dlg.setTransFunc(BPToolGUIContextTime::timeZone2Str);
-			dlg.setSource(tzs);
-			dlg.setTitle(UIUtil.wrapBPTitle(BPActionConstCommon.TXT_SEL) + " " + m_lh.v(BPLocaleConstTGTime.TIMEZONE));
-			dlg.setFilterVisible(true);
-			dlg.setVisible(true);
-			TimeZone tz = dlg.getSelectData();
+			TimeZone tz = UIStd.select(tzs, UIUtil.wrapBPTitle(BPActionConstCommon.TXT_SEL) + " " + m_lh.v(BPLocaleConstTGTime.TIMEZONE), BPToolGUIContextTime::timeZone2Str,
+					m_cmbzones.getSelectedIndex() != -1 ? tzs.indexOf(m_cmbzones.getSelectedItem()) : -1, true);
 			if (tz != null)
-			{
 				m_cmbzones.setSelectedItem(tz);
-			}
 		}
 
 		protected void onFromLocalTime(ActionEvent e)
